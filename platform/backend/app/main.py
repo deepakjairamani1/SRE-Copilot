@@ -1,0 +1,48 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from .context import get_context
+
+# Initialize FastAPI app
+app = FastAPI(
+    title="SRE Copilot API",
+    description="Backend API for SRE Copilot Platform",
+    version="1.0.0"
+)
+
+# CORS middleware - allow frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Startup event - load configuration and print debug info"""
+    ctx = get_context()
+    print("🚀 SRE Copilot API starting up...")
+    print("📋 Configuration loaded:")
+    debug_info = ctx.debug_info()
+    for key, value in debug_info["config"].items():
+        print(f"   {key}: {value}")
+
+
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for monitoring"""
+    return {
+        "status": "ok",
+        "service": "sre-copilot-api"
+    }
+
+
+# Debug configuration endpoint
+@app.get("/debug/config")
+async def debug_config():
+    """Debug endpoint to view current configuration"""
+    ctx = get_context()
+    return ctx.debug_info()
