@@ -30,7 +30,7 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
-      - '--enable-feature=remote-write-receiver'  # Enable remote write API
+      - '--web.enable-remote-write-receiver' 
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
