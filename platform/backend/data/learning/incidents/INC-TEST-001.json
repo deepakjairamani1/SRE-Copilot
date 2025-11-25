@@ -1,0 +1,14 @@
+{
+  "incident_id": "INC-TEST-001",
+  "title": "Anomaly in core-athenamind service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-25T10:42:59.501033",
+  "root_cause": "High memory usage",
+  "fix_applied": "Increase memory allocation",
+  "success": true,
+  "keywords": [
+    "anomaly",
+    "core-athenamind",
+    "service"
+  ]
+}

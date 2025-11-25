@@ -76,7 +76,7 @@ class PrometheusClient:
         
         thresholds = {
             "cpu_usage": (80, 60),
-            "memory_usage": (80, 60),  # inverted logic handled in query
+            "memory_usage": (90, 80),  # Low threshold to detect issues early
             "error_rate": (5, 1),
             "latency_p95": (1000, 500),
             "latency_p99": (1500, 1000)

@@ -7,4 +7,5 @@ pydantic-settings
 httpx
 redis
 anthropic
+openai
 python-dotenv

@@ -1,0 +1,15 @@
+{
+  "incident_id": "INC-1558DB32",
+  "title": "High Error Rate in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-25T13:55:27.824977",
+  "root_cause": "Unknown, but high HTTP error rate indicates potential issue with service or downstream dependencies",
+  "fix_applied": "Investigate recent code changes",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "network-connectivity",
+    "server-overload"
+  ],
+  "learning_reason": "Novel issue with clear metrics indicating high HTTP error rate"
+}

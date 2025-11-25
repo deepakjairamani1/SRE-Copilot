@@ -1,6 +1,31 @@
+import logging
+import sys
+import os
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .context import get_context
+from .routers import incidents, analytics, rca, observability
+
+# Create logs directory
+Path('logs').mkdir(exist_ok=True)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler('logs/sre_copilot.log', mode='a')
+    ]
+)
+
+# Set specific loggers
+logging.getLogger('app.agents.rca_agent').setLevel(logging.DEBUG)
+logging.getLogger('app.clients').setLevel(logging.DEBUG)
+logging.getLogger('uvicorn.access').setLevel(logging.WARNING)
+
+logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -23,11 +48,14 @@ app.add_middleware(
 async def startup_event():
     """Startup event - load configuration and print debug info"""
     ctx = get_context()
-    print("🚀 SRE Copilot API starting up...")
-    print("📋 Configuration loaded:")
+    logger.info("🚀 SRE Copilot API starting up...")
+    logger.info("📋 Configuration loaded:")
     debug_info = ctx.debug_info()
     for key, value in debug_info["config"].items():
-        print(f"   {key}: {value}")
+        logger.info(f"   {key}: {value}")
+    
+    logger.info("Logging configured: INFO level to stdout and logs/sre_copilot.log")
+    logger.info("Debug logging enabled for RCA agent and clients")
 
 
 # Health check endpoint
@@ -46,3 +74,10 @@ async def debug_config():
     """Debug endpoint to view current configuration"""
     ctx = get_context()
     return ctx.debug_info()
+
+
+# Include routers
+app.include_router(incidents.router)
+app.include_router(analytics.router)
+app.include_router(rca.router)
+app.include_router(observability.router)

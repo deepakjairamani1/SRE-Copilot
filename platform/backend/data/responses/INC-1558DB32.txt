@@ -1,0 +1,69 @@
+```json
+{
+  "executive_summary": {
+    "title": "High Error Rate in core-athenamind Service",
+    "severity": "high",
+    "impact": "Elevated HTTP error rate",
+    "user_impact": "Users may experience failed requests"
+  },
+  "timeline": [
+    {"timestamp": "13:55:27", "event": "Anomaly detected in HTTP error rate", "source": "prometheus"}
+  ],
+  "root_cause": {
+    "primary_cause": "Unknown, but high HTTP error rate indicates potential issue with service or downstream dependencies",
+    "contributing_factors": ["Potential network issues", "Server overload"],
+    "evidence": [
+      {"type": "metric", "description": "HTTP error rate percent", "value": "47.06%"},
+      {"type": "metric", "description": "Network receive bytes per second", "value": "10787.12 bytes/sec"}
+    ],
+    "confidence_score": 0.6,
+    "similar_to_past_incident": null
+  },
+  "technical_details": {
+    "affected_components": [{"component": "core-athenamind", "status": "degraded"}],
+    "metrics_snapshot": {
+      "cpu_usage_percent": 13.76,
+      "memory_usage_percent": 74.76,
+      "disk_read_bytes_per_sec": 1076392.92,
+      "disk_write_bytes_per_sec": 1644079.60,
+      "network_receive_bytes_per_sec": 10787.12,
+      "network_transmit_bytes_per_sec": 24808.05,
+      "http_error_rate_percent": 47.06,
+      "http_latency_p95_ms": 287.50,
+      "http_latency_p99_ms": 457.50,
+      "avg_response_time_ms": 31.76
+    }
+  },
+  "impact_assessment": {
+    "severity": "high",
+    "users_affected": "Estimated 50% of users"
+  },
+  "remediation": {
+    "immediate_actions": [
+      {"action": "Investigate recent code changes", "command": "git log", "estimated_time": "30m", "expected_impact": "Identify potential cause"},
+      {"action": "Check server logs for errors", "command": "tail -f /var/log/server.log", "estimated_time": "15m", "expected_impact": "Identify potential errors"}
+    ],
+    "permanent_fixes": [
+      {"fix": "Implement retry mechanism for failed requests", "priority": "P1"}
+    ]
+  },
+  "prevention": {
+    "code_changes": ["Add error handling for downstream dependencies"],
+    "monitoring_enhancements": ["Alert on high HTTP error rate"]
+  },
+  "potential_causes": [
+    {"hypothesis": "Network connectivity issues", "probability": 0.3, "evidence": ["High network receive bytes per second"]},
+    {"hypothesis": "Server overload", "probability": 0.2, "evidence": ["High disk write bytes per second"]}
+  ],
+  "confidence": {
+    "overall_score": 0.6,
+    "uncertainties": ["Unknown root cause", "Limited data"],
+    "recommendation": "Investigate recent code changes and check server logs for errors"
+  },
+  "learning_metadata": {
+    "worth_learning": true,
+    "reason": "Novel issue with clear metrics indicating high HTTP error rate",
+    "keywords": ["http-error-rate", "network-connectivity", "server-overload"]
+  }
+}
+```

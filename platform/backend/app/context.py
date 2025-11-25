@@ -7,7 +7,7 @@ class Context(BaseSettings):
     """Configuration management using Pydantic BaseSettings"""
     
     # Database
-    DB_URL: str = "sqlite:////data/sre_copilot.db"
+    DB_URL: str = "sqlite:///data/sre_copilot.db"
     
     # External services
     REDIS_URL: str = "redis://redis:6379"
@@ -24,6 +24,7 @@ class Context(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "allow"
     
     def debug_info(self) -> Dict[str, Any]:
         """Return configuration with masked secrets for debugging"""

@@ -88,16 +88,19 @@ services:
     container_name: sre-copilot-api
     ports:
       - "7474:8000"
-    environment:
-      - DB_URL=sqlite:////data/sre_copilot.db
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    env_file:
+      - ./backend/.env
     volumes:
-      - ./backend/app:/app/app  # Hot reload
-      - backend-data:/data
+      - ./backend/app:/app/app
+      - ./backend/data:/app/data
+      - ./backend/logs:/app/logs
     networks:
       - platform-network
     depends_on:
       - redis
+      - prometheus
+      - loki
+      - jaeger
     restart: unless-stopped
 
 # Persistent volumes for data retention
