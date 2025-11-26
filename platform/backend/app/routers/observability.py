@@ -4,7 +4,7 @@ from typing import Optional
 router = APIRouter(prefix="/api/observability", tags=["observability"])
 
 
-@router.get("/metrics/current")
+@router.get("/metrics")
 async def get_current_metrics(service: Optional[str] = None):
     """Get current metrics from Prometheus"""
     from app.clients.prometheus_client import PrometheusClient
@@ -14,14 +14,10 @@ async def get_current_metrics(service: Optional[str] = None):
     client = PrometheusClient(ctx.PROMETHEUS_URL)
     metrics = await client.get_critical_metrics()
     
-    return {
-        "service": service or "all",
-        "metrics": metrics,
-        "timestamp": metrics.get("query_timestamp")
-    }
+    return metrics
 
 
-@router.get("/logs/recent")
+@router.get("/logs")
 async def get_recent_logs(service: Optional[str] = None, time_range: str = "5m"):
     """Get recent logs from Loki"""
     from app.clients.loki_client import LokiClient
@@ -31,14 +27,10 @@ async def get_recent_logs(service: Optional[str] = None, time_range: str = "5m")
     client = LokiClient(ctx.LOKI_URL)
     logs = await client.query_logs(time_range=time_range)
     
-    return {
-        "service": service or "all",
-        "time_range": time_range,
-        "logs": logs
-    }
+    return logs
 
 
-@router.get("/traces/recent")
+@router.get("/traces")
 async def get_recent_traces(service: Optional[str] = None, time_range: str = "5m"):
     """Get recent traces from Jaeger"""
     from app.clients.jaeger_client import JaegerClient
@@ -48,11 +40,7 @@ async def get_recent_traces(service: Optional[str] = None, time_range: str = "5m
     client = JaegerClient(ctx.JAEGER_QUERY_URL)
     traces = await client.query_traces(time_range=time_range)
     
-    return {
-        "service": service or "all",
-        "time_range": time_range,
-        "traces": traces
-    }
+    return traces
 
 
 @router.get("/health-check")
