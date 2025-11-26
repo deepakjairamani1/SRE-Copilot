@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-EE87BFE7",
+  "title": "Database Connection Refused",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-26T17:40:43.744013",
+  "root_cause": "database connection refused",
+  "fix_applied": "restart database service",
+  "success": true,
+  "keywords": [
+    "database-connection",
+    "connection-refused",
+    "http-error",
+    "postgresql",
+    "retry-mechanism"
+  ],
+  "learning_reason": "novel issue with clear root cause and actionable fix"
+}
