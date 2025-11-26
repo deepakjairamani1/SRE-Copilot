@@ -287,7 +287,7 @@ class RCAAgent:
         return list(keywords)[:10]
     
     def _calculate_keyword_similarity(self, current_keywords: List[str], past_keywords: List[str]) -> float:
-        """Calculate keyword similarity percentage"""
+        """Calculate keyword similarity - need at least 3 matching keywords"""
         if not current_keywords or not past_keywords:
             return 0.0
         
@@ -297,10 +297,15 @@ class RCAAgent:
         if not current_set:
             return 0.0
         
-        # Calculate Jaccard similarity
+        # Count matching keywords
         intersection = len(current_set & past_set)
-        union = len(current_set | past_set)
         
+        # Need at least 3 matches
+        if intersection < 3:
+            return 0.0
+        
+        # Calculate Jaccard similarity
+        union = len(current_set | past_set)
         return (intersection / union * 100) if union > 0 else 0.0
     
     async def _fetch_similar_incidents(self, incident_data: Dict, prometheus_data: Dict = None, 
@@ -562,31 +567,33 @@ class RCAAgent:
             raise Exception("openai package not installed. Run: pip install openai")
     
     def _summarize_metrics(self, prometheus_data: Dict) -> str:
-        """Summarize metrics in compact form"""
+        """Show all metrics with full details"""
         summary = []
         
-        # Host metrics - only current values with status
+        # Host metrics
         host = prometheus_data.get('host_metrics', {})
-        for name, data in host.items():
-            if data.get('current') is not None:
-                status = data.get('status', 'ok')
-                icon = '🔴' if status == 'critical' else '🟡' if status == 'warning' else '🟢'
-                summary.append(f"{icon} {name}: {data['current']:.2f} {data.get('unit', '')} (min:{data.get('min', 0):.1f}, max:{data.get('max', 0):.1f}, avg:{data.get('avg', 0):.1f})")
+        if host:
+            summary.append("HOST METRICS:")
+            for name, data in host.items():
+                if data.get('current') is not None:
+                    status = data.get('status', 'ok')
+                    icon = '🔴 CRITICAL' if status == 'critical' else '🟡 WARNING' if status == 'warning' else '🟢 OK'
+                    summary.append(f"  {icon} {name}: {data['current']:.2f} {data.get('unit', '')} (min:{data.get('min', 0):.1f}, max:{data.get('max', 0):.1f}, avg:{data.get('avg', 0):.1f})")
         
-        # OTLP metrics - only critical ones
+        # ALL OTLP metrics
         otlp = prometheus_data.get('otlp_metrics', {})
-        critical_otlp = ['http_error_rate_percent', 'http_latency_p95_ms', 'http_latency_p99_ms', 'avg_response_time_ms']
-        for name in critical_otlp:
-            if name in otlp and otlp[name].get('current') is not None:
-                data = otlp[name]
-                status = data.get('status', 'ok')
-                icon = '🔴' if status == 'critical' else '🟡' if status == 'warning' else '🟢'
-                summary.append(f"{icon} {name}: {data['current']:.2f} {data.get('unit', '')} (min:{data.get('min', 0):.1f}, max:{data.get('max', 0):.1f}, avg:{data.get('avg', 0):.1f})")
+        if otlp:
+            summary.append("\nOTLP METRICS:")
+            for name, data in otlp.items():
+                if data.get('current') is not None:
+                    status = data.get('status', 'ok')
+                    icon = '🔴 CRITICAL' if status == 'critical' else '🟡 WARNING' if status == 'warning' else '🟢 OK'
+                    summary.append(f"  {icon} {name}: {data['current']:.2f} {data.get('unit', '')} (min:{data.get('min', 0):.1f}, max:{data.get('max', 0):.1f}, avg:{data.get('avg', 0):.1f})")
         
         return "\n".join(summary)
     
     def _deduplicate_logs(self, logs: Dict) -> str:
-        """Deduplicate logs and extract unique messages"""
+        """Deduplicate logs and show full messages"""
         result = []
         
         for level in ['error_logs', 'critical_logs', 'warning_logs']:
@@ -594,7 +601,7 @@ class RCAAgent:
             if not log_list:
                 continue
             
-            # Extract unique messages
+            # Group by message
             unique_msgs = {}
             for log in log_list:
                 msg = log.get('message', '')
@@ -603,27 +610,41 @@ class RCAAgent:
             
             if unique_msgs:
                 result.append(f"\n{level.upper().replace('_LOGS', '')}:")
-                for msg, count in sorted(unique_msgs.items(), key=lambda x: x[1], reverse=True)[:5]:
-                    result.append(f"  [{count}x] {msg[:200]}")
+                for msg, count in sorted(unique_msgs.items(), key=lambda x: x[1], reverse=True)[:15]:
+                    result.append(f"  [{count}x] {msg}")
         
         return "\n".join(result) if result else "No error/critical/warning logs"
     
     def _summarize_traces(self, traces: Dict) -> str:
-        """Summarize traces with key information"""
+        """Show traces with full details and spans"""
         result = []
         
-        slow = traces.get('slow_traces', [])[:3]
-        errors = traces.get('error_traces', [])[:3]
+        slow = traces.get('slow_traces', [])[:10]
+        errors = traces.get('error_traces', [])[:10]
+        samples = traces.get('sample_traces_with_spans', [])[:5]
         
         if slow:
             result.append("\nSLOW TRACES:")
             for t in slow:
-                result.append(f"  - {t.get('operation_name', 'unknown')}: {t.get('duration_ms', 0):.0f}ms, spans:{t.get('span_count', 0)}")
+                result.append(f"  - Operation: {t.get('operation_name', 'unknown')}")
+                result.append(f"    Duration: {t.get('duration_ms', 0):.0f}ms, Spans: {t.get('span_count', 0)}, Service: {t.get('service', 'unknown')}")
         
         if errors:
             result.append("\nERROR TRACES:")
             for t in errors:
-                result.append(f"  - {t.get('operation_name', 'unknown')}: {t.get('duration_ms', 0):.0f}ms, error:{t.get('error', 'unknown')}")
+                result.append(f"  - Operation: {t.get('operation_name', 'unknown')}")
+                result.append(f"    Duration: {t.get('duration_ms', 0):.0f}ms, Service: {t.get('service', 'unknown')}")
+                result.append(f"    Error: {t.get('error', 'unknown')}")
+        
+        if samples:
+            result.append("\nSAMPLE TRACES WITH SPANS:")
+            for t in samples:
+                result.append(f"  - Operation: {t.get('operation_name', 'unknown')}, Duration: {t.get('duration_ms', 0):.0f}ms")
+                spans = t.get('spans', [])
+                if spans:
+                    result.append(f"    All Spans ({len(spans)} total):")
+                    for span in spans:
+                        result.append(f"      - {span.get('operation_name', 'unknown')}: {span.get('duration_ms', 0):.0f}ms")
         
         summary = traces.get('summary', {})
         if summary:
@@ -665,7 +686,7 @@ Metrics: {len(prometheus_data.get('host_metrics', {}))} host + {len(prometheus_d
 
 === OBSERVABILITY DATA (LAST 5 MINUTES) ===
 
-PROMETHEUS METRICS (Summarized - 🔴=critical, 🟡=warning, 🟢=ok):
+PROMETHEUS METRICS (Summarized):
 {prom_str}
 
 LOKI LOGS (Unique messages with occurrence count):
@@ -741,7 +762,7 @@ IMPORTANT: Return ONLY valid JSON, no markdown, no explanation.
 
 AFTER generating the RCA, also provide learning metadata:
 - Is this incident worth learning from? (novel issue, clear root cause, actionable fix)
-- If yes, provide 3-5 relevant technical keywords (e.g., "memory-leak", "connection-pool", "rate-limit")
+- If yes, provide 5-7 relevant technical keywords (e.g., "http-error", "database-connection", "memory-leak", "timeout", "rate-limit")
 
 Add these fields to your JSON response:
 {{
@@ -749,7 +770,7 @@ Add these fields to your JSON response:
   "learning_metadata": {{
     "worth_learning": true/false,
     "reason": "why this is/isn't worth storing",
-    "keywords": ["keyword1", "keyword2", "keyword3"]
+    "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]
   }}
 }}"""
         
