@@ -4,6 +4,7 @@ import { StatCard } from '../components/ui/StatCard'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { MetricChart } from '../components/features/MetricChart'
+import { SkeletonCard } from '../components/ui/SkeletonCard'
 import { useMetrics } from '../hooks/useMetrics'
 import { useIncidents, useIncidentStats } from '../hooks/useIncidents'
 import { 
@@ -204,9 +205,9 @@ export default function Dashboard() {
 
           {incidentsLoading ? (
             <div className="space-y-3">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-20 bg-gray-100 rounded-lg animate-pulse" />
-              ))}
+              <SkeletonCard lines={2} />
+              <SkeletonCard lines={2} />
+              <SkeletonCard lines={2} />
             </div>
           ) : incidents && incidents.length > 0 ? (
             <div className="space-y-3">

@@ -11,7 +11,7 @@ export function Header() {
               <Activity className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">SRE Copilot</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Albeyla</h1>
               <p className="text-xs text-gray-600">Autonomous Incident Investigation</p>
             </div>
           </Link>
