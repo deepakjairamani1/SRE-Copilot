@@ -88,16 +88,16 @@ export default function Dashboard() {
                 <MetricRow
                   icon={<Cpu className="w-5 h-5" />}
                   label="CPU Usage"
-                  value={`${metrics?.host_metrics.cpu_usage_percent?.current.toFixed(1) || 0}%`}
+                  value={`${(metrics?.host_metrics.cpu_usage_percent?.current || 0).toFixed(1)}%`}
                   status={metrics?.host_metrics.cpu_usage_percent?.status || 'ok'}
-                  details={`avg: ${metrics?.host_metrics.cpu_usage_percent?.avg?.toFixed(1) || 0}%`}
+                  details={`avg: ${(metrics?.host_metrics.cpu_usage_percent?.avg || 0).toFixed(1)}%`}
                 />
                 <MetricRow
                   icon={<HardDrive className="w-5 h-5" />}
                   label="Memory Usage"
-                  value={`${metrics?.host_metrics.memory_usage_percent?.current.toFixed(1) || 0}%`}
+                  value={`${(metrics?.host_metrics.memory_usage_percent?.current || 0).toFixed(1)}%`}
                   status={metrics?.host_metrics.memory_usage_percent?.status || 'ok'}
-                  details={`avg: ${metrics?.host_metrics.memory_usage_percent?.avg?.toFixed(1) || 0}%`}
+                  details={`avg: ${(metrics?.host_metrics.memory_usage_percent?.avg || 0).toFixed(1)}%`}
                 />
                 <MetricRow
                   icon={<Network className="w-5 h-5" />}
@@ -129,27 +129,27 @@ export default function Dashboard() {
                 <MetricRow
                   icon={<AlertTriangle className="w-5 h-5" />}
                   label="Error Rate"
-                  value={`${metrics?.otlp_metrics.http_error_rate_percent?.current.toFixed(2) || 0}%`}
+                  value={`${(metrics?.otlp_metrics.http_error_rate_percent?.current || 0).toFixed(2)}%`}
                   status={metrics?.otlp_metrics.http_error_rate_percent?.status || 'ok'}
                   critical={metrics?.otlp_metrics.http_error_rate_percent?.status === 'critical'}
                 />
                 <MetricRow
                   icon={<Zap className="w-5 h-5" />}
                   label="P95 Latency"
-                  value={`${metrics?.otlp_metrics.http_latency_p95_ms?.current.toFixed(1) || 0}ms`}
+                  value={`${(metrics?.otlp_metrics.http_latency_p95_ms?.current || 0).toFixed(1)}ms`}
                   status={metrics?.otlp_metrics.http_latency_p95_ms?.status || 'ok'}
                 />
                 <MetricRow
                   icon={<Activity className="w-5 h-5" />}
                   label="Total Requests"
-                  value={metrics?.otlp_metrics.http_requests_total?.current.toFixed(0) || '0'}
+                  value={(metrics?.otlp_metrics.http_requests_total?.current?.toFixed(0)) || '0'}
                   status="ok"
                 />
                 {metrics?.otlp_metrics.http_active_connections && (
                   <MetricRow
                     icon={<Network className="w-5 h-5" />}
                     label="Active Connections"
-                    value={metrics.otlp_metrics.http_active_connections.current.toFixed(0)}
+                    value={(metrics.otlp_metrics.http_active_connections.current || 0).toFixed(0)}
                     status={metrics.otlp_metrics.http_active_connections.status}
                   />
                 )}
@@ -157,7 +157,7 @@ export default function Dashboard() {
                   <MetricRow
                     icon={<HardDrive className="w-5 h-5" />}
                     label="DB Query Time"
-                    value={`${(metrics.otlp_metrics.db_query_duration_seconds.current * 1000).toFixed(1)}ms`}
+                    value={`${((metrics.otlp_metrics.db_query_duration_seconds.current || 0) * 1000).toFixed(1)}ms`}
                     status={metrics.otlp_metrics.db_query_duration_seconds.status}
                   />
                 )}

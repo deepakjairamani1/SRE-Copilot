@@ -1,0 +1,18 @@
+{
+  "incident_id": "INC-CAFDE9D0",
+  "title": "High HTTP Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-27T09:03:36.797692",
+  "root_cause": "High HTTP error rate due to unknown cause",
+  "fix_applied": "Investigate server configuration and database connections",
+  "success": true,
+  "keywords": [
+    "http-error",
+    "server-configuration",
+    "database-connection",
+    "error-handling",
+    "logging",
+    "monitoring"
+  ],
+  "learning_reason": "Novel issue with clear evidence of high HTTP error rate and potential for actionable fix"
+}

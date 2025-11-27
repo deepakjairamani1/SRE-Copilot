@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
@@ -79,26 +80,40 @@ export default function IncidentsList() {
   }
 
   const exportToCSV = () => {
-    if (!filteredIncidents) return
+    if (!filteredIncidents || filteredIncidents.length === 0) {
+      toast.error('No incidents to export')
+      return
+    }
     
-    const headers = ['Incident ID', 'Service', 'Severity', 'Status', 'Title', 'Detected At', 'Confidence']
-    const rows = filteredIncidents.map(i => [
-      i.incident_id,
-      i.service,
-      i.severity,
-      i.status,
-      i.title,
-      i.detected_at,
-      `${(i.confidence_score * 100).toFixed(0)}%`
-    ])
-    
-    const csv = [headers, ...rows].map(row => row.join(',')).join('\n')
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `incidents-${new Date().toISOString().split('T')[0]}.csv`
-    a.click()
+    try {
+      const headers = ['Incident ID', 'Service', 'Severity', 'Status', 'Title', 'Detected At', 'Confidence']
+      const rows = filteredIncidents.map(i => [
+        i.incident_id,
+        i.service,
+        i.severity,
+        i.status,
+        `"${i.title.replace(/"/g, '""')}"`,
+        i.detected_at,
+        `${(i.confidence_score * 100).toFixed(0)}%`
+      ])
+      
+      const csv = [headers, ...rows].map(row => row.join(',')).join('\n')
+      const blob = new Blob([csv], { type: 'text/csv' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `incidents-${new Date().toISOString().split('T')[0]}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+      
+      toast.success('CSV exported successfully', {
+        description: `${filteredIncidents.length} incidents exported`
+      })
+    } catch (error) {
+      toast.error('Failed to export CSV', {
+        description: 'An error occurred while generating the file'
+      })
+    }
   }
 
   return (

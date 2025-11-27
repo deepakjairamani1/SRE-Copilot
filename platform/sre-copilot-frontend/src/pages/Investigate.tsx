@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
@@ -34,15 +35,28 @@ export default function Investigate() {
     const serviceToInvestigate = selectedService === 'custom' ? customService : selectedService
     
     if (!serviceToInvestigate) {
-      alert('Please enter a service name')
+      toast.error('Please select or enter a service name')
       return
     }
 
+    toast.loading('Starting investigation...', { id: 'investigation' })
+
     triggerInvestigation(serviceToInvestigate, {
       onSuccess: (data) => {
+        toast.success('Investigation completed successfully!', { 
+          id: 'investigation',
+          description: `Incident ${data.incident_id} created`
+        })
+        
         setTimeout(() => {
           navigate(`/incidents/${data.incident_id}`)
         }, 2000)
+      },
+      onError: (error: any) => {
+        toast.error('Investigation failed', {
+          id: 'investigation',
+          description: error.message || 'An unexpected error occurred'
+        })
       }
     })
   }
