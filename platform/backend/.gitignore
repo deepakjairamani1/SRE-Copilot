@@ -9,7 +9,7 @@ data/*.db
 data/prompts/
 data/responses/
 
-# Logs
+# Logs (should not be tracked)
 logs/
 *.log
 
