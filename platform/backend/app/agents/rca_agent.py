@@ -10,6 +10,7 @@ from typing import Dict, Any, List
 from app.clients.prometheus_client import PrometheusClient
 from app.clients.loki_client import LokiClient
 from app.clients.jaeger_client import JaegerClient
+from app.agents.bedrock_integration import call_bedrock
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,7 @@ class RCAAgent:
     def _get_default_model(self) -> str:
         """Get default model for provider"""
         defaults = {
+            "bedrock": "anthropic.claude-sonnet-4-20250514-v1:0",
             "claude": "claude-sonnet-4-20250514",
             "gpt": "gpt-4o",
             "gemini": "gemini-2.0-flash-exp",
@@ -445,7 +447,9 @@ class RCAAgent:
     
     async def _call_llm(self, prompt: str) -> tuple[str, int]:
         """Call configured LLM provider"""
-        if self.llm_provider == "claude":
+        if self.llm_provider == "bedrock":
+            return await call_bedrock(prompt, self.llm_model)
+        elif self.llm_provider == "claude":
             return await self._call_claude(prompt)
         elif self.llm_provider == "gpt":
             return await self._call_openai(prompt)
@@ -593,9 +597,10 @@ class RCAAgent:
         return "\n".join(summary)
     
     def _deduplicate_logs(self, logs: Dict) -> str:
-        """Deduplicate logs and show full messages"""
+        """Deduplicate logs and show full messages including info logs for context"""
         result = []
         
+        # Show error, critical, warning logs (all)
         for level in ['error_logs', 'critical_logs', 'warning_logs']:
             log_list = logs.get(level, [])
             if not log_list:
@@ -613,37 +618,50 @@ class RCAAgent:
                 for msg, count in sorted(unique_msgs.items(), key=lambda x: x[1], reverse=True)[:15]:
                     result.append(f"  [{count}x] {msg}")
         
-        return "\n".join(result) if result else "No error/critical/warning logs"
+        # Add 10 info logs for context (what's working normally)
+        info_logs = logs.get('info_logs', [])
+        if info_logs:
+            result.append("\nINFO (for context - what's working):")
+            unique_info = {}
+            for log in info_logs:
+                msg = log.get('message', '')
+                if msg:
+                    unique_info[msg] = unique_info.get(msg, 0) + 1
+            
+            for msg, count in sorted(unique_info.items(), key=lambda x: x[1], reverse=True)[:10]:
+                result.append(f"  [{count}x] {msg}")
+        
+        return "\n".join(result) if result else "No logs found"
     
     def _summarize_traces(self, traces: Dict) -> str:
-        """Show traces with full details and spans"""
+        """Show traces with full details including normal traces for context"""
         result = []
         
         slow = traces.get('slow_traces', [])[:10]
         errors = traces.get('error_traces', [])[:10]
-        samples = traces.get('sample_traces_with_spans', [])[:5]
+        samples = traces.get('sample_traces_with_spans', [])[:10]
         
         if slow:
-            result.append("\nSLOW TRACES:")
+            result.append("\nSLOW TRACES (performance issues):")
             for t in slow:
                 result.append(f"  - Operation: {t.get('operation_name', 'unknown')}")
                 result.append(f"    Duration: {t.get('duration_ms', 0):.0f}ms, Spans: {t.get('span_count', 0)}, Service: {t.get('service', 'unknown')}")
         
         if errors:
-            result.append("\nERROR TRACES:")
+            result.append("\nERROR TRACES (failures):")
             for t in errors:
                 result.append(f"  - Operation: {t.get('operation_name', 'unknown')}")
                 result.append(f"    Duration: {t.get('duration_ms', 0):.0f}ms, Service: {t.get('service', 'unknown')}")
                 result.append(f"    Error: {t.get('error', 'unknown')}")
         
         if samples:
-            result.append("\nSAMPLE TRACES WITH SPANS:")
-            for t in samples:
+            result.append("\nNORMAL TRACES WITH SPANS (for context - what's working):")
+            for t in samples[:10]:  # Show 10 normal traces
                 result.append(f"  - Operation: {t.get('operation_name', 'unknown')}, Duration: {t.get('duration_ms', 0):.0f}ms")
                 spans = t.get('spans', [])
                 if spans:
-                    result.append(f"    All Spans ({len(spans)} total):")
-                    for span in spans:
+                    result.append(f"    Spans ({len(spans)} total):")
+                    for span in spans[:15]:  # Show more spans for context
                         result.append(f"      - {span.get('operation_name', 'unknown')}: {span.get('duration_ms', 0):.0f}ms")
         
         summary = traces.get('summary', {})
@@ -708,7 +726,7 @@ Provide comprehensive RCA analysis:
 
 Learn from similar past incidents - if a past fix worked, recommend it.
 
-Generate a JSON response with these exact fields:
+Generate a JSON response with these exact fields, give your analysis in detail and make it the best SRE agent with everything in place you need to do, use google for suggest best pratices and take your time to analyse this:
 {{
   "executive_summary": {{
     "title": "brief title",
@@ -997,11 +1015,12 @@ Similarity Score: {inc['similarity_score']}/5
         
         # Cost per million tokens
         pricing = {
-            "claude": 3.0,  # Claude Sonnet 4
-            "gpt": 2.5,     # GPT-4o
-            "gemini": 0.0,  # Gemini 2.0 Flash (free tier)
-            "grok": 5.0,    # Grok Beta
-            "groq": 0.0     # Groq (free tier)
+            "bedrock": 3.0,  # Bedrock Claude Sonnet 4
+            "claude": 3.0,   # Claude Sonnet 4
+            "gpt": 2.5,      # GPT-4o
+            "gemini": 0.0,   # Gemini 2.0 Flash (free tier)
+            "grok": 5.0,     # Grok Beta
+            "groq": 0.0      # Groq (free tier)
         }
         
         cost_per_million = pricing.get(self.llm_provider, 3.0)
