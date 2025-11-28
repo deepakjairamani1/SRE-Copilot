@@ -4,9 +4,11 @@ interface BadgeProps {
   variant: 'critical' | 'high' | 'medium' | 'low' | 'ok' | 'warning'
   children: React.ReactNode
   withDot?: boolean
+  size?: string
+  className?: string
 }
 
-export function Badge({ variant, children, withDot = false }: BadgeProps) {
+export function Badge({ variant, children, withDot = false, className }: BadgeProps) {
   const colors = {
     critical: 'bg-red-100 text-red-700 border-red-200',
     high: 'bg-amber-100 text-amber-700 border-amber-200',
@@ -26,7 +28,7 @@ export function Badge({ variant, children, withDot = false }: BadgeProps) {
   }
 
   return (
-    <span className={cn('status-badge border', colors[variant])}>
+    <span className={cn('status-badge border', colors[variant], className)}>
       {withDot && (
         <span className={cn('pulse-dot', dotColors[variant])}>
           <span className={cn('absolute inline-flex h-full w-full rounded-full', dotColors[variant])} />

@@ -65,7 +65,7 @@ export default function IncidentDetails() {
     )
   }
 
-  const severityConfig = SEVERITY_CONFIG[incident.severity]
+  const severityConfig = SEVERITY_CONFIG[incident.severity as keyof typeof SEVERITY_CONFIG]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">

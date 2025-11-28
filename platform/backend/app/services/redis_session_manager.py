@@ -1,9 +1,10 @@
 import redis
 import json
 
+REDIS_URL = "redis://redis:6379"
 class RedisSessionManager:
     def __init__(self):
-        self.client = redis.Redis(host="localhost", port=6379, decode_responses=True)
+        self.client = redis.from_url(REDIS_URL, decode_responses=True)
 
     def get_session(self, session_id):
         data = self.client.get(session_id)

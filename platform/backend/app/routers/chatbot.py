@@ -2,16 +2,19 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 import logging
-from google.adk import Content
-from services.redis_session_manager import session_manager
+from google.genai import types
+from ..services.redis_session_manager import session_manager
 
-from adk.agent import runner
+from ..adk.agent import call_agent_async
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/chatbot", tags=["chatbot"])
 
 
+APP_NAME = "guardrail_app"
+USER_ID = "user_1"
+SESSION_ID = "session_001"
 class ChatMessageRequest(BaseModel):
     """Request model for chatbot messages"""
     message: str
@@ -35,36 +38,27 @@ async def send_message(request: ChatMessageRequest):
     Handle user message using ADK runner.
     """
     try:
+        logger.info(f"Request: message='{request.message}', conversation_id={request.conversation_id}")
         session_id = request.conversation_id or session_manager.create_session()
         session_state = session_manager.get_session(session_id)
-
-        user_message = Content.text(request.message)
-
+        logger.info((session_state, session_id, "frrgtyhujyh"))
+        # user_message = types.Content(request.message)
+        # content = types.Content(role='user', parts=[types.Part(text=request.message)])
+        # logger.info((user_message, "frrgtyhujyh"))
         final_text = None
         updated_state = None
-
-        async for event in runner.run_async(
-            user_id="USER",
-            session_id=session_id,
-            new_message=user_message,
-            state_delta=session_state
-        ):
-            # Capture final logical response
-            if event.is_final_response():
-                if event.content and event.content.parts:
-                    final_text = event.content.parts[0].text
-
-            # Capture updated session state
-            if event.state is not None:
-                updated_state = event.state
-
+        logger.info(("session_state", session_state))
+        logger.info("gruhrhbeifdop")
+        final_text = await call_agent_async(request.message)
         # Save state back to Redis
         if updated_state is not None:
             session_manager.update_session(session_id, updated_state)
-
         return ChatMessageResponse(
             conversation_id=session_id,
-            response=final_text or "Unable to respond right now."
+            response=final_text or "Unable to respond right now.",
+            tokens_used=0,  # TODO: Track actual token usage
+            model="gemini-2.0-flash",
+            status="success"
         )
 
     except Exception as e:
