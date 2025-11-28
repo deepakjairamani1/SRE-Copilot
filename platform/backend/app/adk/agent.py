@@ -28,13 +28,16 @@ SESSION_ID = "session_001"
 
 # session_service = InMemorySessionService()
 my_llm_agent = LlmAgent(
-        name="ModelCallbackAgent",
-        model="gemini-2.0-flash",
-        instruction=SYSTEM_PROMPT, # Base instruction
-        # description="An LLM agent demonstrating before_model_callback",
+    name="ModelCallbackAgent",
+    model="gemini-2.0-flash",
+    instruction=SYSTEM_PROMPT + """
+IMPORTANT:
+You must ALWAYS return plain text only.
+Never output tool_code, JSON, metadata, or tool listings.
+Never describe available tools.
+Your job is to answer like a normal assistant in clean text.
+""",
 )
-
-# Create global runner instance
 session_service = InMemorySessionService()
 runner = Runner(agent=my_llm_agent, app_name=APP_NAME, session_service=session_service)
 

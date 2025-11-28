@@ -39,18 +39,14 @@ async def send_message(request: ChatMessageRequest):
     Handle user message using ADK runner.
     """
     try:
-        logger.info(f"Request: message='{request.message}', conversation_id={request.conversation_id}")
         session_id = request.conversation_id or session_manager.create_session()
         session_state = session_manager.get_session(session_id)
-        logger.info((session_state, session_id, "frrgtyhujyh"))
         # user_message = types.Content(request.message)
         # content = types.Content(role='user', parts=[types.Part(text=request.message)])
         # logger.info((user_message, "frrgtyhujyh"))
         final_text = None
         updated_state = None
-        logger.info(("session_state", session_state))
-        logger.info("gruhrhbeifdop")
-        final_text = response = asyncio.run(call_agent_async(request.message))
+        final_text = await call_agent_async(request.message)
 
         # Save state back to Redis
         if updated_state is not None:

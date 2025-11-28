@@ -5,7 +5,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .context import get_context
-from .routers import chatbot
+from .routers import chatbot, incidents, observability
 
 # Create logs directory
 Path('logs').mkdir(exist_ok=True)
@@ -76,5 +76,6 @@ async def debug_config():
     return ctx.debug_info()
 
 # Include routers
-
 app.include_router(chatbot.router)
+app.include_router(incidents.router)
+app.include_router(observability.router)
