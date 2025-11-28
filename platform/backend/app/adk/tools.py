@@ -71,12 +71,8 @@ async def loki_fetch_logs(tool_context: ToolContext, time_range: str = "5m", **k
         tool_context.state["temp:last_loki_query"] = time_range
         logger.info(f"Summary: {summary}")
         logger.info(f"Patterns: {logs}")
-        return {
-            "status": "ok",
-            "message": f"Fetched logs for last {time_range}",
-            "logs": logs[:200],
-            "summary": summary
-        }
+        tool_context.state["flow.loki_fetch_logs_done"] = True
+        return logs
 
     except Exception as e:
         return {"error": f"Loki fetch failed: {str(e)}"}
