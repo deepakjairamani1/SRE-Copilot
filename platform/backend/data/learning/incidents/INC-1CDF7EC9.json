@@ -1,0 +1,14 @@
+{
+  "incident_id": "INC-1CDF7EC9",
+  "title": "Rule-based analysis (AI unavailable)",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-25T11:33:29.923365",
+  "root_cause": "Error burst detected (118 errors in 5 minutes)",
+  "fix_applied": "Investigate manually",
+  "success": true,
+  "keywords": [
+    "rule-based",
+    "analysis",
+    "unavailable)"
+  ]
+}

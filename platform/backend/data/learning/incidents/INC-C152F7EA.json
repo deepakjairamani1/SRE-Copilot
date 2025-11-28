@@ -1,0 +1,15 @@
+{
+  "incident_id": "INC-C152F7EA",
+  "title": "High Error Rate in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-25T12:16:21.596940",
+  "root_cause": "High error rate in HTTP requests",
+  "fix_applied": "Investigate HTTP request handling and backend services",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "request-handling",
+    "backend-services"
+  ],
+  "learning_reason": "Novel issue with clear root cause and actionable fix"
+}

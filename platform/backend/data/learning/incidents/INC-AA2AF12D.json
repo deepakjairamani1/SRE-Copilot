@@ -1,0 +1,14 @@
+{
+  "incident_id": "INC-AA2AF12D",
+  "title": "Rule-based analysis (AI unavailable)",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-25T11:46:48.411432",
+  "root_cause": "Unknown - insufficient data or AI unavailable",
+  "fix_applied": "Investigate manually",
+  "success": true,
+  "keywords": [
+    "rule-based",
+    "analysis",
+    "unavailable)"
+  ]
+}

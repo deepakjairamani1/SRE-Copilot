@@ -1,0 +1,4244 @@
+You are an expert SRE analyzing an incident.
+
+CURRENT INCIDENT:
+Service: core-athenamind
+Detected: 2025-11-25T12:08:17.814256
+Alert: Anomaly detected - investigate observability data below
+
+=== DATA SUMMARY ===
+Logs: ERROR: 56, CRITICAL: 0, WARNING: 0, INFO: 9
+Traces: Slow: 0, Error: 7, Samples: 5
+Metrics: 6 host + 9 OTLP
+
+=== OBSERVABILITY DATA (LAST 5 MINUTES) ===
+
+PROMETHEUS METRICS (All Core Metrics):
+{
+  "host_metrics": {
+    "cpu_usage_percent": {
+      "max": 17.297222222227404,
+      "min": 8.822222222224823,
+      "avg": 11.189802142166618,
+      "current": 17.297222222227404,
+      "unit": "percent",
+      "status": "ok"
+    },
+    "memory_usage_percent": {
+      "max": 74.7249246393671,
+      "min": 72.5649897993933,
+      "avg": 73.5984359888262,
+      "current": 74.36715038562303,
+      "unit": "percent",
+      "status": "ok"
+    },
+    "disk_read_bytes_per_sec": {
+      "max": 921326.9333333333,
+      "min": 10649.95499849995,
+      "avg": 281268.69624016644,
+      "current": 232371.98760041327,
+      "unit": "bytes/sec",
+      "status": "ok"
+    },
+    "disk_write_bytes_per_sec": {
+      "max": 2210474.6666666665,
+      "min": 1072059.7333333334,
+      "avg": 1617699.2222519126,
+      "current": 2117288.3570547644,
+      "unit": "bytes/sec",
+      "status": "ok"
+    },
+    "network_receive_bytes_per_sec": {
+      "max": 65349.020731395685,
+      "min": 3523.1174372479086,
+      "avg": 15805.810369296312,
+      "current": 23322.233333333334,
+      "unit": "bytes/sec",
+      "status": "ok"
+    },
+    "network_transmit_bytes_per_sec": {
+      "max": 59970.33769137613,
+      "min": 6499.383312777093,
+      "avg": 18169.04115341822,
+      "current": 41501.23333333334,
+      "unit": "bytes/sec",
+      "status": "ok"
+    }
+  },
+  "query_timestamp": "2025-11-25T12:08:18.108625+00:00",
+  "otlp_metrics": {
+    "http_requests_total": {
+      "max": 15.0,
+      "min": 7.0,
+      "avg": 10.428571428571429,
+      "current": 15.0,
+      "unit": "requests",
+      "status": "ok"
+    },
+    "http_error_rate_percent": {
+      "max": 100.0,
+      "min": 46.666666666666664,
+      "avg": 77.14285714285714,
+      "current": 46.666666666666664,
+      "unit": "percent",
+      "status": "critical"
+    },
+    "http_latency_p95_ms": {
+      "max": 312.5,
+      "min": 41.249999999999986,
+      "avg": 157.5,
+      "current": 312.5,
+      "unit": "milliseconds",
+      "status": "ok"
+    },
+    "http_latency_p99_ms": {
+      "max": 462.4999999999999,
+      "min": 48.24999999999999,
+      "avg": 225.78571428571422,
+      "current": 462.4999999999999,
+      "unit": "milliseconds",
+      "status": "ok"
+    },
+    "active_connections": {
+      "max": 0.0,
+      "min": 0.0,
+      "avg": 0.0,
+      "current": 0.0,
+      "unit": "connections",
+      "status": "ok"
+    },
+    "db_connections": {
+      "max": 8.0,
+      "min": 1.0,
+      "avg": 3.142857142857143,
+      "current": 8.0,
+      "unit": "connections",
+      "status": "ok"
+    },
+    "avg_request_size_bytes": {
+      "max": 246.0,
+      "min": 246.0,
+      "avg": 246.0,
+      "current": 246.0,
+      "unit": "bytes",
+      "status": "ok"
+    },
+    "avg_response_size_bytes": {
+      "max": 3812.214285714286,
+      "min": 543.0,
+      "avg": 1944.0918367346942,
+      "current": 3812.214285714286,
+      "unit": "bytes",
+      "status": "ok"
+    },
+    "avg_response_time_ms": {
+      "max": 33.93333333333333,
+      "min": 15.428571428571429,
+      "avg": 23.359183673469385,
+      "current": 33.93333333333333,
+      "unit": "milliseconds",
+      "status": "ok"
+    }
+  },
+  "overall_health": "critical"
+}
+
+LOKI LOGS (All Errors/Critical/Warnings + Info Samples):
+{
+  "errors": [
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.776303+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.776301+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.776299+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.776267+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.776245+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.776244+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.776241+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.776217+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.377486+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.377485+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.377471+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.375670+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.375669+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.375667+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.375628+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.375587+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.175989+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.175988+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.175987+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.175970+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.175969+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.175967+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.175961+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:38.175945+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.776070+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.776069+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.776067+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.776043+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.776037+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.776035+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.776034+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.776009+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.575500+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.575499+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.575498+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.575479+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.575478+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.575476+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.575472+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.575455+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.176742+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.176738+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.176734+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.176727+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.176724+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.176720+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.176673+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:37.176391+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:36.575858+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:36.575856+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:36.575852+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Request failed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:59",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:36.575823+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "HTTP 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:108",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:36.575818+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Unexpected database error: 500: Database error",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "database:81",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:36.376313+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:36.376290+00:00"
+    },
+    {
+      "level": "ERROR",
+      "message": "Database error loading home page: (psycopg2.OperationalError) connection to server at \"localhost\" (127.0.0.1), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:466",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:36.376274+00:00"
+    }
+  ],
+  "critical": [],
+  "warnings": [],
+  "info_sample": [
+    {
+      "level": "INFO",
+      "message": "Request completed: GET /api/categories",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:63",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:07:03.376266+00:00"
+    },
+    {
+      "level": "INFO",
+      "message": "Request completed: GET /api/posts",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:63",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:07:03.376264+00:00"
+    },
+    {
+      "level": "INFO",
+      "message": "Request completed: GET /api/stats",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:63",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:07:03.175839+00:00"
+    },
+    {
+      "level": "INFO",
+      "message": "Request completed: GET /dashboard",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:63",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:07:03.175835+00:00"
+    },
+    {
+      "level": "INFO",
+      "message": "Request completed: GET /dashboard",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:63",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:07:03.175832+00:00"
+    },
+    {
+      "level": "INFO",
+      "message": "Request completed: POST /api/login",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:63",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:07:03.175829+00:00"
+    },
+    {
+      "level": "INFO",
+      "message": "User logged in successfully: deepak",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:168",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:07:03.175823+00:00"
+    },
+    {
+      "level": "INFO",
+      "message": "Request completed: GET /login",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:63",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:57.575981+00:00"
+    },
+    {
+      "level": "INFO",
+      "message": "Request completed: GET /",
+      "trace_id": null,
+      "span_id": null,
+      "service_name": "core-athenamind",
+      "source": "main:63",
+      "exception": null,
+      "stack_trace": [],
+      "timestamp": "2025-11-25T12:06:56.175377+00:00"
+    }
+  ]
+}
+
+JAEGER TRACES (All Slow/Error Traces + Samples with Spans):
+{
+  "slow_traces": [],
+  "error_traces": [
+    {
+      "trace_id": "851287254fc6dea4609d8dd49830f5ef",
+      "start_time": "2025-11-25T12:06:38.335591+00:00",
+      "duration_ms": 10.14,
+      "total_spans": 7,
+      "services": [
+        "core-athenamind"
+      ],
+      "root_operation": "GET /",
+      "error": true,
+      "error_message": null,
+      "slowest_span": {
+        "operation": "GET /",
+        "duration_ms": 10.14,
+        "service": "core-athenamind",
+        "tags": {
+          "error": true,
+          "http.flavor": "1.1",
+          "http.host": "127.0.0.1:8000",
+          "http.method": "GET",
+          "http.route": "/",
+          "http.scheme": "http",
+          "http.server_name": "localhost:8000",
+          "http.status_code": 500,
+          "http.target": "/",
+          "http.url": "http://localhost:8000/",
+          "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+          "net.host.port": 8000,
+          "net.peer.ip": "127.0.0.1",
+          "net.peer.port": 36546,
+          "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+          "otel.scope.version": "0.59b0",
+          "otel.status_code": "ERROR",
+          "span.kind": "server"
+        }
+      },
+      "critical_path": [
+        {
+          "operation": "GET /",
+          "duration_ms": 10.14,
+          "start_time": 1764072398335591
+        },
+        {
+          "operation": "connect",
+          "duration_ms": 0.828,
+          "start_time": 1764072398337626
+        },
+        {
+          "operation": "jinja2.render",
+          "duration_ms": 0.055,
+          "start_time": 1764072398344559
+        },
+        {
+          "operation": "jinja2.load",
+          "duration_ms": 0.052,
+          "start_time": 1764072398344450
+        },
+        {
+          "operation": "GET / http send",
+          "duration_ms": 0.036,
+          "start_time": 1764072398344995
+        }
+      ]
+    },
+    {
+      "trace_id": "5240dba10b5840b728bbb0efd4b4f04a",
+      "start_time": "2025-11-25T12:06:37.380095+00:00",
+      "duration_ms": 10.539,
+      "total_spans": 7,
+      "services": [
+        "core-athenamind"
+      ],
+      "root_operation": "GET /",
+      "error": true,
+      "error_message": null,
+      "slowest_span": {
+        "operation": "GET /",
+        "duration_ms": 10.539,
+        "service": "core-athenamind",
+        "tags": {
+          "error": true,
+          "http.flavor": "1.1",
+          "http.host": "127.0.0.1:8000",
+          "http.method": "GET",
+          "http.route": "/",
+          "http.scheme": "http",
+          "http.server_name": "localhost:8000",
+          "http.status_code": 500,
+          "http.target": "/",
+          "http.url": "http://localhost:8000/",
+          "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+          "net.host.port": 8000,
+          "net.peer.ip": "127.0.0.1",
+          "net.peer.port": 36546,
+          "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+          "otel.scope.version": "0.59b0",
+          "otel.status_code": "ERROR",
+          "span.kind": "server"
+        }
+      },
+      "critical_path": [
+        {
+          "operation": "GET /",
+          "duration_ms": 10.539,
+          "start_time": 1764072397380095
+        },
+        {
+          "operation": "connect",
+          "duration_ms": 0.825,
+          "start_time": 1764072397382101
+        },
+        {
+          "operation": "jinja2.render",
+          "duration_ms": 0.053,
+          "start_time": 1764072397389648
+        },
+        {
+          "operation": "jinja2.load",
+          "duration_ms": 0.043,
+          "start_time": 1764072397389553
+        },
+        {
+          "operation": "GET / http send",
+          "duration_ms": 0.035,
+          "start_time": 1764072397390065
+        }
+      ]
+    },
+    {
+      "trace_id": "52b34251327b0e40f6836fea355f169d",
+      "start_time": "2025-11-25T12:06:38.031421+00:00",
+      "duration_ms": 9.668,
+      "total_spans": 7,
+      "services": [
+        "core-athenamind"
+      ],
+      "root_operation": "GET /",
+      "error": true,
+      "error_message": null,
+      "slowest_span": {
+        "operation": "GET /",
+        "duration_ms": 9.668,
+        "service": "core-athenamind",
+        "tags": {
+          "error": true,
+          "http.flavor": "1.1",
+          "http.host": "127.0.0.1:8000",
+          "http.method": "GET",
+          "http.route": "/",
+          "http.scheme": "http",
+          "http.server_name": "localhost:8000",
+          "http.status_code": 500,
+          "http.target": "/",
+          "http.url": "http://localhost:8000/",
+          "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+          "net.host.port": 8000,
+          "net.peer.ip": "127.0.0.1",
+          "net.peer.port": 36546,
+          "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+          "otel.scope.version": "0.59b0",
+          "otel.status_code": "ERROR",
+          "span.kind": "server"
+        }
+      },
+      "critical_path": [
+        {
+          "operation": "GET /",
+          "duration_ms": 9.668,
+          "start_time": 1764072398031421
+        },
+        {
+          "operation": "connect",
+          "duration_ms": 0.868,
+          "start_time": 1764072398033374
+        },
+        {
+          "operation": "jinja2.render",
+          "duration_ms": 0.055,
+          "start_time": 1764072398040023
+        },
+        {
+          "operation": "jinja2.load",
+          "duration_ms": 0.044,
+          "start_time": 1764072398039923
+        },
+        {
+          "operation": "GET / http send",
+          "duration_ms": 0.042,
+          "start_time": 1764072398040442
+        }
+      ]
+    },
+    {
+      "trace_id": "a2b9b41f3e13715a619b76a2b33ea8ab",
+      "start_time": "2025-11-25T12:06:38.648833+00:00",
+      "duration_ms": 9.348,
+      "total_spans": 7,
+      "services": [
+        "core-athenamind"
+      ],
+      "root_operation": "GET /",
+      "error": true,
+      "error_message": null,
+      "slowest_span": {
+        "operation": "GET /",
+        "duration_ms": 9.348,
+        "service": "core-athenamind",
+        "tags": {
+          "error": true,
+          "http.flavor": "1.1",
+          "http.host": "127.0.0.1:8000",
+          "http.method": "GET",
+          "http.route": "/",
+          "http.scheme": "http",
+          "http.server_name": "localhost:8000",
+          "http.status_code": 500,
+          "http.target": "/",
+          "http.url": "http://localhost:8000/",
+          "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+          "net.host.port": 8000,
+          "net.peer.ip": "127.0.0.1",
+          "net.peer.port": 36546,
+          "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+          "otel.scope.version": "0.59b0",
+          "otel.status_code": "ERROR",
+          "span.kind": "server"
+        }
+      },
+      "critical_path": [
+        {
+          "operation": "GET /",
+          "duration_ms": 9.348,
+          "start_time": 1764072398648833
+        },
+        {
+          "operation": "connect",
+          "duration_ms": 0.849,
+          "start_time": 1764072398650535
+        },
+        {
+          "operation": "jinja2.render",
+          "duration_ms": 0.07,
+          "start_time": 1764072398657038
+        },
+        {
+          "operation": "jinja2.load",
+          "duration_ms": 0.045,
+          "start_time": 1764072398656939
+        },
+        {
+          "operation": "GET / http send",
+          "duration_ms": 0.038,
+          "start_time": 1764072398657508
+        }
+      ]
+    },
+    {
+      "trace_id": "e301798948da816d6eba7024e614eaba",
+      "start_time": "2025-11-25T12:06:37.066453+00:00",
+      "duration_ms": 10.505,
+      "total_spans": 7,
+      "services": [
+        "core-athenamind"
+      ],
+      "root_operation": "GET /",
+      "error": true,
+      "error_message": null,
+      "slowest_span": {
+        "operation": "GET /",
+        "duration_ms": 10.505,
+        "service": "core-athenamind",
+        "tags": {
+          "error": true,
+          "http.flavor": "1.1",
+          "http.host": "127.0.0.1:8000",
+          "http.method": "GET",
+          "http.route": "/",
+          "http.scheme": "http",
+          "http.server_name": "localhost:8000",
+          "http.status_code": 500,
+          "http.target": "/",
+          "http.url": "http://localhost:8000/",
+          "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+          "net.host.port": 8000,
+          "net.peer.ip": "127.0.0.1",
+          "net.peer.port": 36546,
+          "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+          "otel.scope.version": "0.59b0",
+          "otel.status_code": "ERROR",
+          "span.kind": "server"
+        }
+      },
+      "critical_path": [
+        {
+          "operation": "GET /",
+          "duration_ms": 10.505,
+          "start_time": 1764072397066453
+        },
+        {
+          "operation": "connect",
+          "duration_ms": 1.249,
+          "start_time": 1764072397068620
+        },
+        {
+          "operation": "jinja2.render",
+          "duration_ms": 0.057,
+          "start_time": 1764072397075957
+        },
+        {
+          "operation": "jinja2.load",
+          "duration_ms": 0.045,
+          "start_time": 1764072397075857
+        },
+        {
+          "operation": "GET / http send",
+          "duration_ms": 0.039,
+          "start_time": 1764072397076381
+        }
+      ]
+    },
+    {
+      "trace_id": "e486fa0bc822b9377cb84a44e8180502",
+      "start_time": "2025-11-25T12:06:36.337904+00:00",
+      "duration_ms": 44.377,
+      "total_spans": 9,
+      "services": [
+        "core-athenamind"
+      ],
+      "root_operation": "GET /",
+      "error": true,
+      "error_message": null,
+      "slowest_span": {
+        "operation": "GET /",
+        "duration_ms": 44.377,
+        "service": "core-athenamind",
+        "tags": {
+          "error": true,
+          "http.flavor": "1.1",
+          "http.host": "127.0.0.1:8000",
+          "http.method": "GET",
+          "http.route": "/",
+          "http.scheme": "http",
+          "http.server_name": "localhost:8000",
+          "http.status_code": 500,
+          "http.target": "/",
+          "http.url": "http://localhost:8000/",
+          "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+          "net.host.port": 8000,
+          "net.peer.ip": "127.0.0.1",
+          "net.peer.port": 36546,
+          "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+          "otel.scope.version": "0.59b0",
+          "otel.status_code": "ERROR",
+          "span.kind": "server"
+        }
+      },
+      "critical_path": [
+        {
+          "operation": "GET /",
+          "duration_ms": 44.377,
+          "start_time": 1764072396337904
+        },
+        {
+          "operation": "connect",
+          "duration_ms": 6.181,
+          "start_time": 1764072396361797
+        },
+        {
+          "operation": "jinja2.load",
+          "duration_ms": 2.289,
+          "start_time": 1764072396377239
+        },
+        {
+          "operation": "jinja2.compile",
+          "duration_ms": 1.912,
+          "start_time": 1764072396377555
+        },
+        {
+          "operation": "SELECT",
+          "duration_ms": 1.764,
+          "start_time": 1764072396361970
+        }
+      ]
+    },
+    {
+      "trace_id": "a03c1854bf04d35110ac694a5472e974",
+      "start_time": "2025-11-25T12:06:37.700349+00:00",
+      "duration_ms": 9.997,
+      "total_spans": 7,
+      "services": [
+        "core-athenamind"
+      ],
+      "root_operation": "GET /",
+      "error": true,
+      "error_message": null,
+      "slowest_span": {
+        "operation": "GET /",
+        "duration_ms": 9.997,
+        "service": "core-athenamind",
+        "tags": {
+          "error": true,
+          "http.flavor": "1.1",
+          "http.host": "127.0.0.1:8000",
+          "http.method": "GET",
+          "http.route": "/",
+          "http.scheme": "http",
+          "http.server_name": "localhost:8000",
+          "http.status_code": 500,
+          "http.target": "/",
+          "http.url": "http://localhost:8000/",
+          "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+          "net.host.port": 8000,
+          "net.peer.ip": "127.0.0.1",
+          "net.peer.port": 36546,
+          "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+          "otel.scope.version": "0.59b0",
+          "otel.status_code": "ERROR",
+          "span.kind": "server"
+        }
+      },
+      "critical_path": [
+        {
+          "operation": "GET /",
+          "duration_ms": 9.997,
+          "start_time": 1764072397700349
+        },
+        {
+          "operation": "connect",
+          "duration_ms": 1.152,
+          "start_time": 1764072397702318
+        },
+        {
+          "operation": "jinja2.render",
+          "duration_ms": 0.053,
+          "start_time": 1764072397709379
+        },
+        {
+          "operation": "jinja2.load",
+          "duration_ms": 0.042,
+          "start_time": 1764072397709285
+        },
+        {
+          "operation": "GET / http send",
+          "duration_ms": 0.034,
+          "start_time": 1764072397709775
+        }
+      ]
+    }
+  ],
+  "sample_traces_with_spans": [
+    {
+      "trace_id": "34a6b10c71440de763b76ac6b2c448a9",
+      "duration_ms": 5.91,
+      "root_operation": "GET /api/categories",
+      "spans": [
+        {
+          "span_id": "d9b85e26964f7407",
+          "parent_span_id": null,
+          "operation_name": "GET /api/categories",
+          "start_time": 1764072423261059,
+          "duration_ms": 5.91,
+          "tags": {
+            "http.flavor": "1.1",
+            "http.host": "127.0.0.1:8000",
+            "http.method": "GET",
+            "http.route": "/api/categories",
+            "http.scheme": "http",
+            "http.server_name": "localhost:8000",
+            "http.status_code": 200,
+            "http.target": "/api/categories",
+            "http.url": "http://localhost:8000/api/categories",
+            "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+            "net.host.port": 8000,
+            "net.peer.ip": "127.0.0.1",
+            "net.peer.port": 36552,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "server"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "59a1b4db74ca9ed2",
+              "parent_span_id": "d9b85e26964f7407",
+              "operation_name": "GET /api/categories http send",
+              "start_time": 1764072423266789,
+              "duration_ms": 0.027,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "9c6217c7060cd911",
+              "parent_span_id": "d9b85e26964f7407",
+              "operation_name": "SELECT",
+              "start_time": 1764072423263727,
+              "duration_ms": 0.349,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "c846b841c941d11e",
+              "parent_span_id": "d9b85e26964f7407",
+              "operation_name": "connect",
+              "start_time": 1764072423262339,
+              "duration_ms": 0.539,
+              "tags": {
+                "db.name": "blogdb",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false,
+              "children": [
+                {
+                  "span_id": "a0511971230712b4",
+                  "parent_span_id": "c846b841c941d11e",
+                  "operation_name": "SELECT",
+                  "start_time": 1764072423262494,
+                  "duration_ms": 0.271,
+                  "tags": {
+                    "db.name": "blogdb",
+                    "db.statement": "SELECT 1",
+                    "db.system": "postgresql",
+                    "db.user": "postgres",
+                    "net.peer.name": "localhost",
+                    "net.peer.port": 5432,
+                    "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                    "otel.scope.version": "0.59b0",
+                    "span.kind": "client"
+                  },
+                  "error": false
+                }
+              ]
+            },
+            {
+              "span_id": "319ad630f095e0dc",
+              "parent_span_id": "d9b85e26964f7407",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423263632,
+              "duration_ms": 0.483,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "9b774edf82bf224f",
+              "parent_span_id": "d9b85e26964f7407",
+              "operation_name": "GET /api/categories http send",
+              "start_time": 1764072423266069,
+              "duration_ms": 0.054,
+              "tags": {
+                "asgi.event.type": "http.response.start",
+                "http.status_code": 200,
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "e5a2d5fad261c19d",
+              "parent_span_id": "d9b85e26964f7407",
+              "operation_name": "GET /api/categories http send",
+              "start_time": 1764072423266608,
+              "duration_ms": 0.029,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "c846b841c941d11e",
+          "parent_span_id": "d9b85e26964f7407",
+          "operation_name": "connect",
+          "start_time": 1764072423262339,
+          "duration_ms": 0.539,
+          "tags": {
+            "db.name": "blogdb",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "a0511971230712b4",
+              "parent_span_id": "c846b841c941d11e",
+              "operation_name": "SELECT",
+              "start_time": 1764072423262494,
+              "duration_ms": 0.271,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT 1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "a0511971230712b4",
+          "parent_span_id": "c846b841c941d11e",
+          "operation_name": "SELECT",
+          "start_time": 1764072423262494,
+          "duration_ms": 0.271,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT 1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "319ad630f095e0dc",
+          "parent_span_id": "d9b85e26964f7407",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423263632,
+          "duration_ms": 0.483,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "9c6217c7060cd911",
+          "parent_span_id": "d9b85e26964f7407",
+          "operation_name": "SELECT",
+          "start_time": 1764072423263727,
+          "duration_ms": 0.349,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "9b774edf82bf224f",
+          "parent_span_id": "d9b85e26964f7407",
+          "operation_name": "GET /api/categories http send",
+          "start_time": 1764072423266069,
+          "duration_ms": 0.054,
+          "tags": {
+            "asgi.event.type": "http.response.start",
+            "http.status_code": 200,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "e5a2d5fad261c19d",
+          "parent_span_id": "d9b85e26964f7407",
+          "operation_name": "GET /api/categories http send",
+          "start_time": 1764072423266608,
+          "duration_ms": 0.029,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "59a1b4db74ca9ed2",
+          "parent_span_id": "d9b85e26964f7407",
+          "operation_name": "GET /api/categories http send",
+          "start_time": 1764072423266789,
+          "duration_ms": 0.027,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        }
+      ],
+      "duration_breakdown": {
+        "other": 7.662
+      }
+    },
+    {
+      "trace_id": "414640b5c952bd4a6cf1ca6148d2f3eb",
+      "duration_ms": 20.141,
+      "root_operation": "GET /api/posts",
+      "spans": [
+        {
+          "span_id": "94db8f7081fc136f",
+          "parent_span_id": null,
+          "operation_name": "GET /api/posts",
+          "start_time": 1764072423236792,
+          "duration_ms": 20.141,
+          "tags": {
+            "http.flavor": "1.1",
+            "http.host": "127.0.0.1:8000",
+            "http.method": "GET",
+            "http.route": "/api/posts",
+            "http.scheme": "http",
+            "http.server_name": "localhost:8000",
+            "http.status_code": 200,
+            "http.target": "/api/posts",
+            "http.url": "http://localhost:8000/api/posts",
+            "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+            "net.host.port": 8000,
+            "net.peer.ip": "127.0.0.1",
+            "net.peer.port": 36552,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "server"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "5bd1037ad8416f12",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423243897,
+              "duration_ms": 0.452,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "bb7278e7d67282a2",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423251273,
+              "duration_ms": 0.77,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "68dd83a4adc91704",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "GET /api/posts http send",
+              "start_time": 1764072423256713,
+              "duration_ms": 0.019,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "24a5a77f5087506e",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423243991,
+              "duration_ms": 0.331,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "bc53018b7af80400",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423251446,
+              "duration_ms": 0.55,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "1a12d8a0738ea1e8",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423254606,
+              "duration_ms": 0.302,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "911e605c1e2d4b2f",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "connect",
+              "start_time": 1764072423238423,
+              "duration_ms": 0.532,
+              "tags": {
+                "db.name": "blogdb",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false,
+              "children": [
+                {
+                  "span_id": "44c98e72bf58cb94",
+                  "parent_span_id": "911e605c1e2d4b2f",
+                  "operation_name": "SELECT",
+                  "start_time": 1764072423238553,
+                  "duration_ms": 0.268,
+                  "tags": {
+                    "db.name": "blogdb",
+                    "db.statement": "SELECT 1",
+                    "db.system": "postgresql",
+                    "db.user": "postgres",
+                    "net.peer.name": "localhost",
+                    "net.peer.port": 5432,
+                    "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                    "otel.scope.version": "0.59b0",
+                    "span.kind": "client"
+                  },
+                  "error": false
+                }
+              ]
+            },
+            {
+              "span_id": "75bb2a1e02ef852c",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423245004,
+              "duration_ms": 0.39,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "cc135fc78a1f7e63",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423249525,
+              "duration_ms": 0.688,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "44844ef7f579f104",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423241719,
+              "duration_ms": 0.426,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts \nWHERE posts.published = true ORDER BY posts.created_at DESC",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "05941cedf9a29292",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423247381,
+              "duration_ms": 0.526,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "f3d06774c5772cd4",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423253156,
+              "duration_ms": 0.498,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "8ed8723f502b5c86",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423239314,
+              "duration_ms": 0.357,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "f3d62d05fdeeedeb",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423247475,
+              "duration_ms": 0.378,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "1a66d0a895d76bb6",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423249677,
+              "duration_ms": 0.489,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "0b067d3355bd12f3",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423253294,
+              "duration_ms": 0.325,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "3cadf7315f1a9749",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423239223,
+              "duration_ms": 0.475,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "a556f1da9a37a9b5",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423241606,
+              "duration_ms": 0.576,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts \nWHERE posts.published = true ORDER BY posts.created_at DESC",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "ab5992324dfdf017",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423246148,
+              "duration_ms": 0.424,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "ab2060272902c11f",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423254464,
+              "duration_ms": 0.476,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "84dfb6b1417dc38a",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "GET /api/posts http send",
+              "start_time": 1764072423256228,
+              "duration_ms": 0.049,
+              "tags": {
+                "asgi.event.type": "http.response.start",
+                "http.status_code": 200,
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "d7b390f0f18ec23e",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "GET /api/posts http send",
+              "start_time": 1764072423256829,
+              "duration_ms": 0.016,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "10dc1b35d6d5fb1c",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423245103,
+              "duration_ms": 0.258,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "d24e013cb451725b",
+              "parent_span_id": "94db8f7081fc136f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423246245,
+              "duration_ms": 0.29,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "911e605c1e2d4b2f",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "connect",
+          "start_time": 1764072423238423,
+          "duration_ms": 0.532,
+          "tags": {
+            "db.name": "blogdb",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "44c98e72bf58cb94",
+              "parent_span_id": "911e605c1e2d4b2f",
+              "operation_name": "SELECT",
+              "start_time": 1764072423238553,
+              "duration_ms": 0.268,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT 1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "44c98e72bf58cb94",
+          "parent_span_id": "911e605c1e2d4b2f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423238553,
+          "duration_ms": 0.268,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT 1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "3cadf7315f1a9749",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423239223,
+          "duration_ms": 0.475,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "8ed8723f502b5c86",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423239314,
+          "duration_ms": 0.357,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "a556f1da9a37a9b5",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423241606,
+          "duration_ms": 0.576,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts \nWHERE posts.published = true ORDER BY posts.created_at DESC",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "44844ef7f579f104",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423241719,
+          "duration_ms": 0.426,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts \nWHERE posts.published = true ORDER BY posts.created_at DESC",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "5bd1037ad8416f12",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423243897,
+          "duration_ms": 0.452,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "24a5a77f5087506e",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423243991,
+          "duration_ms": 0.331,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "75bb2a1e02ef852c",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423245004,
+          "duration_ms": 0.39,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "10dc1b35d6d5fb1c",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423245103,
+          "duration_ms": 0.258,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "ab5992324dfdf017",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423246148,
+          "duration_ms": 0.424,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "d24e013cb451725b",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423246245,
+          "duration_ms": 0.29,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "05941cedf9a29292",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423247381,
+          "duration_ms": 0.526,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "f3d62d05fdeeedeb",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423247475,
+          "duration_ms": 0.378,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "cc135fc78a1f7e63",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423249525,
+          "duration_ms": 0.688,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "1a66d0a895d76bb6",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423249677,
+          "duration_ms": 0.489,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "bb7278e7d67282a2",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423251273,
+          "duration_ms": 0.77,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "bc53018b7af80400",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423251446,
+          "duration_ms": 0.55,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "f3d06774c5772cd4",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423253156,
+          "duration_ms": 0.498,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "0b067d3355bd12f3",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423253294,
+          "duration_ms": 0.325,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "ab2060272902c11f",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423254464,
+          "duration_ms": 0.476,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "1a12d8a0738ea1e8",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "SELECT",
+          "start_time": 1764072423254606,
+          "duration_ms": 0.302,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT categories.id AS categories_id, categories.name AS categories_name, categories.description AS categories_description, categories.color AS categories_color, categories.created_at AS categories_created_at \nFROM categories \nWHERE categories.id = %(pk_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "84dfb6b1417dc38a",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "GET /api/posts http send",
+          "start_time": 1764072423256228,
+          "duration_ms": 0.049,
+          "tags": {
+            "asgi.event.type": "http.response.start",
+            "http.status_code": 200,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "68dd83a4adc91704",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "GET /api/posts http send",
+          "start_time": 1764072423256713,
+          "duration_ms": 0.019,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "d7b390f0f18ec23e",
+          "parent_span_id": "94db8f7081fc136f",
+          "operation_name": "GET /api/posts http send",
+          "start_time": 1764072423256829,
+          "duration_ms": 0.016,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        }
+      ],
+      "duration_breakdown": {
+        "other": 30.005999999999993
+      }
+    },
+    {
+      "trace_id": "a09321e8f3f0f8bb21be8616871d5072",
+      "duration_ms": 26.357,
+      "root_operation": "GET /api/stats",
+      "spans": [
+        {
+          "span_id": "786940cdf4d02e79",
+          "parent_span_id": null,
+          "operation_name": "GET /api/stats",
+          "start_time": 1764072423112022,
+          "duration_ms": 26.357,
+          "tags": {
+            "http.flavor": "1.1",
+            "http.host": "127.0.0.1:8000",
+            "http.method": "GET",
+            "http.route": "/api/stats",
+            "http.scheme": "http",
+            "http.server_name": "localhost:8000",
+            "http.status_code": 200,
+            "http.target": "/api/stats",
+            "http.url": "http://localhost:8000/api/stats",
+            "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+            "net.host.port": 8000,
+            "net.peer.ip": "127.0.0.1",
+            "net.peer.port": 36552,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "server"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "7c7d0c4a145aeb17",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "connect",
+              "start_time": 1764072423113448,
+              "duration_ms": 0.581,
+              "tags": {
+                "db.name": "blogdb",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false,
+              "children": [
+                {
+                  "span_id": "6b9a4abfc9855157",
+                  "parent_span_id": "7c7d0c4a145aeb17",
+                  "operation_name": "SELECT",
+                  "start_time": 1764072423113587,
+                  "duration_ms": 0.319,
+                  "tags": {
+                    "db.name": "blogdb",
+                    "db.statement": "SELECT 1",
+                    "db.system": "postgresql",
+                    "db.user": "postgres",
+                    "net.peer.name": "localhost",
+                    "net.peer.port": 5432,
+                    "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                    "otel.scope.version": "0.59b0",
+                    "span.kind": "client"
+                  },
+                  "error": false
+                }
+              ]
+            },
+            {
+              "span_id": "bc2dd94226dd235b",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423114369,
+              "duration_ms": 0.643,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "6a96e329506cdebe",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423121767,
+              "duration_ms": 2.392,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts) AS anon_1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "52e206d9e7ea1525",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "GET /api/stats http send",
+              "start_time": 1764072423137599,
+              "duration_ms": 0.051,
+              "tags": {
+                "asgi.event.type": "http.response.start",
+                "http.status_code": 200,
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "ecb569beccc2cb90",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "GET /api/stats http send",
+              "start_time": 1764072423138130,
+              "duration_ms": 0.024,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "77227e605605066d",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT",
+              "start_time": 1764072423121923,
+              "duration_ms": 2.188,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts) AS anon_1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "77da3568a60a3610",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT",
+              "start_time": 1764072423128320,
+              "duration_ms": 0.373,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts \nWHERE posts.published = true) AS anon_1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "f1540087919434f7",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT",
+              "start_time": 1764072423129647,
+              "duration_ms": 0.406,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT posts.views AS posts_views \nFROM posts",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "66c9fbd14fbfd190",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423129549,
+              "duration_ms": 0.535,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT posts.views AS posts_views \nFROM posts",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "46fbaab5d3b7037c",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423133221,
+              "duration_ms": 1.307,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT comments.id AS comments_id, comments.content AS comments_content, comments.author_id AS comments_author_id, comments.post_id AS comments_post_id, comments.created_at AS comments_created_at \nFROM comments) AS anon_1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "2af37c0d4d0da2a3",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423128197,
+              "duration_ms": 0.531,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts \nWHERE posts.published = true) AS anon_1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "edfec0f7e3fbd4df",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423135691,
+              "duration_ms": 0.828,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT posts.likes AS posts_likes \nFROM posts",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "4c619d658251976c",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "GET /api/stats http send",
+              "start_time": 1764072423138258,
+              "duration_ms": 0.015,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "6b0c04e4845f5a37",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT",
+              "start_time": 1764072423133333,
+              "duration_ms": 1.143,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT comments.id AS comments_id, comments.content AS comments_content, comments.author_id AS comments_author_id, comments.post_id AS comments_post_id, comments.created_at AS comments_created_at \nFROM comments) AS anon_1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "20b43fdbd0857c78",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT",
+              "start_time": 1764072423135982,
+              "duration_ms": 0.482,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT posts.likes AS posts_likes \nFROM posts",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "e674f73b7e64cc87",
+              "parent_span_id": "786940cdf4d02e79",
+              "operation_name": "SELECT",
+              "start_time": 1764072423114456,
+              "duration_ms": 0.497,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "7c7d0c4a145aeb17",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "connect",
+          "start_time": 1764072423113448,
+          "duration_ms": 0.581,
+          "tags": {
+            "db.name": "blogdb",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "6b9a4abfc9855157",
+              "parent_span_id": "7c7d0c4a145aeb17",
+              "operation_name": "SELECT",
+              "start_time": 1764072423113587,
+              "duration_ms": 0.319,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT 1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "6b9a4abfc9855157",
+          "parent_span_id": "7c7d0c4a145aeb17",
+          "operation_name": "SELECT",
+          "start_time": 1764072423113587,
+          "duration_ms": 0.319,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT 1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "bc2dd94226dd235b",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423114369,
+          "duration_ms": 0.643,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "e674f73b7e64cc87",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT",
+          "start_time": 1764072423114456,
+          "duration_ms": 0.497,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "6a96e329506cdebe",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423121767,
+          "duration_ms": 2.392,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts) AS anon_1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "77227e605605066d",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT",
+          "start_time": 1764072423121923,
+          "duration_ms": 2.188,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts) AS anon_1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "2af37c0d4d0da2a3",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423128197,
+          "duration_ms": 0.531,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts \nWHERE posts.published = true) AS anon_1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "77da3568a60a3610",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT",
+          "start_time": 1764072423128320,
+          "duration_ms": 0.373,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT posts.id AS posts_id, posts.title AS posts_title, posts.slug AS posts_slug, posts.content AS posts_content, posts.excerpt AS posts_excerpt, posts.featured_image AS posts_featured_image, posts.published AS posts_published, posts.views AS posts_views, posts.likes AS posts_likes, posts.author_id AS posts_author_id, posts.category_id AS posts_category_id, posts.created_at AS posts_created_at, posts.updated_at AS posts_updated_at \nFROM posts \nWHERE posts.published = true) AS anon_1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "66c9fbd14fbfd190",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423129549,
+          "duration_ms": 0.535,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT posts.views AS posts_views \nFROM posts",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "f1540087919434f7",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT",
+          "start_time": 1764072423129647,
+          "duration_ms": 0.406,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT posts.views AS posts_views \nFROM posts",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "46fbaab5d3b7037c",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423133221,
+          "duration_ms": 1.307,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT comments.id AS comments_id, comments.content AS comments_content, comments.author_id AS comments_author_id, comments.post_id AS comments_post_id, comments.created_at AS comments_created_at \nFROM comments) AS anon_1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "6b0c04e4845f5a37",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT",
+          "start_time": 1764072423133333,
+          "duration_ms": 1.143,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT count(*) AS count_1 \nFROM (SELECT comments.id AS comments_id, comments.content AS comments_content, comments.author_id AS comments_author_id, comments.post_id AS comments_post_id, comments.created_at AS comments_created_at \nFROM comments) AS anon_1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "edfec0f7e3fbd4df",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423135691,
+          "duration_ms": 0.828,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT posts.likes AS posts_likes \nFROM posts",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "20b43fdbd0857c78",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "SELECT",
+          "start_time": 1764072423135982,
+          "duration_ms": 0.482,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT posts.likes AS posts_likes \nFROM posts",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "52e206d9e7ea1525",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "GET /api/stats http send",
+          "start_time": 1764072423137599,
+          "duration_ms": 0.051,
+          "tags": {
+            "asgi.event.type": "http.response.start",
+            "http.status_code": 200,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "ecb569beccc2cb90",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "GET /api/stats http send",
+          "start_time": 1764072423138130,
+          "duration_ms": 0.024,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "4c619d658251976c",
+          "parent_span_id": "786940cdf4d02e79",
+          "operation_name": "GET /api/stats http send",
+          "start_time": 1764072423138258,
+          "duration_ms": 0.015,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        }
+      ],
+      "duration_breakdown": {
+        "other": 38.672
+      }
+    },
+    {
+      "trace_id": "2c7af3b8da62822791a0af0e19888b51",
+      "duration_ms": 5.312,
+      "root_operation": "GET /dashboard",
+      "spans": [
+        {
+          "span_id": "c397fdfb32976da1",
+          "parent_span_id": null,
+          "operation_name": "GET /dashboard",
+          "start_time": 1764072423075706,
+          "duration_ms": 5.312,
+          "tags": {
+            "http.flavor": "1.1",
+            "http.host": "127.0.0.1:8000",
+            "http.method": "GET",
+            "http.route": "/dashboard",
+            "http.scheme": "http",
+            "http.server_name": "localhost:8000",
+            "http.status_code": 200,
+            "http.target": "/dashboard",
+            "http.url": "http://localhost:8000/dashboard",
+            "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+            "net.host.port": 8000,
+            "net.peer.ip": "127.0.0.1",
+            "net.peer.port": 36552,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "server"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "90d18cffabeadef6",
+              "parent_span_id": "c397fdfb32976da1",
+              "operation_name": "GET /dashboard http send",
+              "start_time": 1764072423080699,
+              "duration_ms": 0.03,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "594574a58b202b97",
+              "parent_span_id": "c397fdfb32976da1",
+              "operation_name": "GET /dashboard http send",
+              "start_time": 1764072423080861,
+              "duration_ms": 0.021,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "d24c2b92f578c09c",
+              "parent_span_id": "c397fdfb32976da1",
+              "operation_name": "SELECT",
+              "start_time": 1764072423077846,
+              "duration_ms": 0.368,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "9c9031b3fe2cfa1d",
+              "parent_span_id": "c397fdfb32976da1",
+              "operation_name": "connect",
+              "start_time": 1764072423077123,
+              "duration_ms": 0.418,
+              "tags": {
+                "db.name": "blogdb",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false,
+              "children": [
+                {
+                  "span_id": "da8228b12c1a7b85",
+                  "parent_span_id": "9c9031b3fe2cfa1d",
+                  "operation_name": "SELECT",
+                  "start_time": 1764072423077232,
+                  "duration_ms": 0.215,
+                  "tags": {
+                    "db.name": "blogdb",
+                    "db.statement": "SELECT 1",
+                    "db.system": "postgresql",
+                    "db.user": "postgres",
+                    "net.peer.name": "localhost",
+                    "net.peer.port": 5432,
+                    "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                    "otel.scope.version": "0.59b0",
+                    "span.kind": "client"
+                  },
+                  "error": false
+                }
+              ]
+            },
+            {
+              "span_id": "11b24eda49bdcf86",
+              "parent_span_id": "c397fdfb32976da1",
+              "operation_name": "jinja2.render",
+              "start_time": 1764072423079425,
+              "duration_ms": 0.177,
+              "tags": {
+                "jinja2.template_name": "dashboard.html",
+                "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false,
+              "children": [
+                {
+                  "span_id": "3a8410f6681190ee",
+                  "parent_span_id": "11b24eda49bdcf86",
+                  "operation_name": "jinja2.load",
+                  "start_time": 1764072423079515,
+                  "duration_ms": 0.039,
+                  "tags": {
+                    "jinja2.template_name": "base.html",
+                    "jinja2.template_path": "templates/base.html",
+                    "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                    "otel.scope.version": "0.59b0",
+                    "span.kind": "internal"
+                  },
+                  "error": false
+                }
+              ]
+            },
+            {
+              "span_id": "f919f09ab3717920",
+              "parent_span_id": "c397fdfb32976da1",
+              "operation_name": "GET /dashboard http send",
+              "start_time": 1764072423080147,
+              "duration_ms": 0.038,
+              "tags": {
+                "asgi.event.type": "http.response.start",
+                "http.status_code": 200,
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "e4d49ac5bc4a1399",
+              "parent_span_id": "c397fdfb32976da1",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423077778,
+              "duration_ms": 0.461,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "41e150a69ca709f1",
+              "parent_span_id": "c397fdfb32976da1",
+              "operation_name": "jinja2.load",
+              "start_time": 1764072423079329,
+              "duration_ms": 0.043,
+              "tags": {
+                "jinja2.template_name": "dashboard.html",
+                "jinja2.template_path": "templates/dashboard.html",
+                "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "9c9031b3fe2cfa1d",
+          "parent_span_id": "c397fdfb32976da1",
+          "operation_name": "connect",
+          "start_time": 1764072423077123,
+          "duration_ms": 0.418,
+          "tags": {
+            "db.name": "blogdb",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "da8228b12c1a7b85",
+              "parent_span_id": "9c9031b3fe2cfa1d",
+              "operation_name": "SELECT",
+              "start_time": 1764072423077232,
+              "duration_ms": 0.215,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT 1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "da8228b12c1a7b85",
+          "parent_span_id": "9c9031b3fe2cfa1d",
+          "operation_name": "SELECT",
+          "start_time": 1764072423077232,
+          "duration_ms": 0.215,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT 1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "e4d49ac5bc4a1399",
+          "parent_span_id": "c397fdfb32976da1",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423077778,
+          "duration_ms": 0.461,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "d24c2b92f578c09c",
+          "parent_span_id": "c397fdfb32976da1",
+          "operation_name": "SELECT",
+          "start_time": 1764072423077846,
+          "duration_ms": 0.368,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "41e150a69ca709f1",
+          "parent_span_id": "c397fdfb32976da1",
+          "operation_name": "jinja2.load",
+          "start_time": 1764072423079329,
+          "duration_ms": 0.043,
+          "tags": {
+            "jinja2.template_name": "dashboard.html",
+            "jinja2.template_path": "templates/dashboard.html",
+            "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "11b24eda49bdcf86",
+          "parent_span_id": "c397fdfb32976da1",
+          "operation_name": "jinja2.render",
+          "start_time": 1764072423079425,
+          "duration_ms": 0.177,
+          "tags": {
+            "jinja2.template_name": "dashboard.html",
+            "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "3a8410f6681190ee",
+              "parent_span_id": "11b24eda49bdcf86",
+              "operation_name": "jinja2.load",
+              "start_time": 1764072423079515,
+              "duration_ms": 0.039,
+              "tags": {
+                "jinja2.template_name": "base.html",
+                "jinja2.template_path": "templates/base.html",
+                "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "3a8410f6681190ee",
+          "parent_span_id": "11b24eda49bdcf86",
+          "operation_name": "jinja2.load",
+          "start_time": 1764072423079515,
+          "duration_ms": 0.039,
+          "tags": {
+            "jinja2.template_name": "base.html",
+            "jinja2.template_path": "templates/base.html",
+            "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "f919f09ab3717920",
+          "parent_span_id": "c397fdfb32976da1",
+          "operation_name": "GET /dashboard http send",
+          "start_time": 1764072423080147,
+          "duration_ms": 0.038,
+          "tags": {
+            "asgi.event.type": "http.response.start",
+            "http.status_code": 200,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "90d18cffabeadef6",
+          "parent_span_id": "c397fdfb32976da1",
+          "operation_name": "GET /dashboard http send",
+          "start_time": 1764072423080699,
+          "duration_ms": 0.03,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "594574a58b202b97",
+          "parent_span_id": "c397fdfb32976da1",
+          "operation_name": "GET /dashboard http send",
+          "start_time": 1764072423080861,
+          "duration_ms": 0.021,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        }
+      ],
+      "duration_breakdown": {
+        "other": 6.863000000000001,
+        "jinja2": 0.259
+      }
+    },
+    {
+      "trace_id": "a672def080909e5cbf1478c0124608b4",
+      "duration_ms": 7.501,
+      "root_operation": "GET /dashboard",
+      "spans": [
+        {
+          "span_id": "81c5313c94ee6d90",
+          "parent_span_id": null,
+          "operation_name": "GET /dashboard",
+          "start_time": 1764072423062203,
+          "duration_ms": 7.501,
+          "tags": {
+            "http.flavor": "1.1",
+            "http.host": "127.0.0.1:8000",
+            "http.method": "GET",
+            "http.route": "/dashboard",
+            "http.scheme": "http",
+            "http.server_name": "localhost:8000",
+            "http.status_code": 200,
+            "http.target": "/dashboard",
+            "http.url": "http://localhost:8000/dashboard",
+            "http.user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+            "net.host.port": 8000,
+            "net.peer.ip": "127.0.0.1",
+            "net.peer.port": 36552,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "server"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "bb4aee44e0e21a87",
+              "parent_span_id": "81c5313c94ee6d90",
+              "operation_name": "SELECT blogdb",
+              "start_time": 1764072423064045,
+              "duration_ms": 0.324,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "7ea6798df12bfe53",
+              "parent_span_id": "81c5313c94ee6d90",
+              "operation_name": "jinja2.render",
+              "start_time": 1764072423068479,
+              "duration_ms": 0.138,
+              "tags": {
+                "jinja2.template_name": "dashboard.html",
+                "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false,
+              "children": [
+                {
+                  "span_id": "a2b3b106d818e3b7",
+                  "parent_span_id": "7ea6798df12bfe53",
+                  "operation_name": "jinja2.load",
+                  "start_time": 1764072423068553,
+                  "duration_ms": 0.032,
+                  "tags": {
+                    "jinja2.template_name": "base.html",
+                    "jinja2.template_path": "templates/base.html",
+                    "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                    "otel.scope.version": "0.59b0",
+                    "span.kind": "internal"
+                  },
+                  "error": false
+                }
+              ]
+            },
+            {
+              "span_id": "b6448cf18512d010",
+              "parent_span_id": "81c5313c94ee6d90",
+              "operation_name": "GET /dashboard http send",
+              "start_time": 1764072423069108,
+              "duration_ms": 0.037,
+              "tags": {
+                "asgi.event.type": "http.response.start",
+                "http.status_code": 200,
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "b5eb2d1b2cc9168b",
+              "parent_span_id": "81c5313c94ee6d90",
+              "operation_name": "GET /dashboard http send",
+              "start_time": 1764072423069508,
+              "duration_ms": 0.016,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            },
+            {
+              "span_id": "c252345931dfa60b",
+              "parent_span_id": "81c5313c94ee6d90",
+              "operation_name": "SELECT",
+              "start_time": 1764072423064111,
+              "duration_ms": 0.239,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            },
+            {
+              "span_id": "b90feafe990cc238",
+              "parent_span_id": "81c5313c94ee6d90",
+              "operation_name": "connect",
+              "start_time": 1764072423063457,
+              "duration_ms": 0.371,
+              "tags": {
+                "db.name": "blogdb",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false,
+              "children": [
+                {
+                  "span_id": "39af9dadeff5751e",
+                  "parent_span_id": "b90feafe990cc238",
+                  "operation_name": "SELECT",
+                  "start_time": 1764072423063556,
+                  "duration_ms": 0.196,
+                  "tags": {
+                    "db.name": "blogdb",
+                    "db.statement": "SELECT 1",
+                    "db.system": "postgresql",
+                    "db.user": "postgres",
+                    "net.peer.name": "localhost",
+                    "net.peer.port": 5432,
+                    "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                    "otel.scope.version": "0.59b0",
+                    "span.kind": "client"
+                  },
+                  "error": false
+                }
+              ]
+            },
+            {
+              "span_id": "0c887a4845cf40fd",
+              "parent_span_id": "81c5313c94ee6d90",
+              "operation_name": "jinja2.load",
+              "start_time": 1764072423065041,
+              "duration_ms": 3.381,
+              "tags": {
+                "jinja2.template_name": "dashboard.html",
+                "jinja2.template_path": "templates/dashboard.html",
+                "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false,
+              "children": [
+                {
+                  "span_id": "e710f3f925fe93df",
+                  "parent_span_id": "0c887a4845cf40fd",
+                  "operation_name": "jinja2.compile",
+                  "start_time": 1764072423066693,
+                  "duration_ms": 1.678,
+                  "tags": {
+                    "jinja2.template_name": "dashboard.html",
+                    "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                    "otel.scope.version": "0.59b0",
+                    "span.kind": "internal"
+                  },
+                  "error": false
+                }
+              ]
+            },
+            {
+              "span_id": "4b53ce0eafd15115",
+              "parent_span_id": "81c5313c94ee6d90",
+              "operation_name": "GET /dashboard http send",
+              "start_time": 1764072423069609,
+              "duration_ms": 0.014,
+              "tags": {
+                "asgi.event.type": "http.response.body",
+                "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "b90feafe990cc238",
+          "parent_span_id": "81c5313c94ee6d90",
+          "operation_name": "connect",
+          "start_time": 1764072423063457,
+          "duration_ms": 0.371,
+          "tags": {
+            "db.name": "blogdb",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "39af9dadeff5751e",
+              "parent_span_id": "b90feafe990cc238",
+              "operation_name": "SELECT",
+              "start_time": 1764072423063556,
+              "duration_ms": 0.196,
+              "tags": {
+                "db.name": "blogdb",
+                "db.statement": "SELECT 1",
+                "db.system": "postgresql",
+                "db.user": "postgres",
+                "net.peer.name": "localhost",
+                "net.peer.port": 5432,
+                "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "client"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "39af9dadeff5751e",
+          "parent_span_id": "b90feafe990cc238",
+          "operation_name": "SELECT",
+          "start_time": 1764072423063556,
+          "duration_ms": 0.196,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT 1",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "bb4aee44e0e21a87",
+          "parent_span_id": "81c5313c94ee6d90",
+          "operation_name": "SELECT blogdb",
+          "start_time": 1764072423064045,
+          "duration_ms": 0.324,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.sqlalchemy",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "c252345931dfa60b",
+          "parent_span_id": "81c5313c94ee6d90",
+          "operation_name": "SELECT",
+          "start_time": 1764072423064111,
+          "duration_ms": 0.239,
+          "tags": {
+            "db.name": "blogdb",
+            "db.statement": "SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.full_name AS users_full_name, users.bio AS users_bio, users.avatar AS users_avatar, users.hashed_password AS users_hashed_password, users.is_active AS users_is_active, users.created_at AS users_created_at \nFROM users \nWHERE users.username = %(username_1)s \n LIMIT %(param_1)s",
+            "db.system": "postgresql",
+            "db.user": "postgres",
+            "net.peer.name": "localhost",
+            "net.peer.port": 5432,
+            "otel.scope.name": "opentelemetry.instrumentation.psycopg2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "client"
+          },
+          "error": false
+        },
+        {
+          "span_id": "0c887a4845cf40fd",
+          "parent_span_id": "81c5313c94ee6d90",
+          "operation_name": "jinja2.load",
+          "start_time": 1764072423065041,
+          "duration_ms": 3.381,
+          "tags": {
+            "jinja2.template_name": "dashboard.html",
+            "jinja2.template_path": "templates/dashboard.html",
+            "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "e710f3f925fe93df",
+              "parent_span_id": "0c887a4845cf40fd",
+              "operation_name": "jinja2.compile",
+              "start_time": 1764072423066693,
+              "duration_ms": 1.678,
+              "tags": {
+                "jinja2.template_name": "dashboard.html",
+                "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "e710f3f925fe93df",
+          "parent_span_id": "0c887a4845cf40fd",
+          "operation_name": "jinja2.compile",
+          "start_time": 1764072423066693,
+          "duration_ms": 1.678,
+          "tags": {
+            "jinja2.template_name": "dashboard.html",
+            "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "7ea6798df12bfe53",
+          "parent_span_id": "81c5313c94ee6d90",
+          "operation_name": "jinja2.render",
+          "start_time": 1764072423068479,
+          "duration_ms": 0.138,
+          "tags": {
+            "jinja2.template_name": "dashboard.html",
+            "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false,
+          "children": [
+            {
+              "span_id": "a2b3b106d818e3b7",
+              "parent_span_id": "7ea6798df12bfe53",
+              "operation_name": "jinja2.load",
+              "start_time": 1764072423068553,
+              "duration_ms": 0.032,
+              "tags": {
+                "jinja2.template_name": "base.html",
+                "jinja2.template_path": "templates/base.html",
+                "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+                "otel.scope.version": "0.59b0",
+                "span.kind": "internal"
+              },
+              "error": false
+            }
+          ]
+        },
+        {
+          "span_id": "a2b3b106d818e3b7",
+          "parent_span_id": "7ea6798df12bfe53",
+          "operation_name": "jinja2.load",
+          "start_time": 1764072423068553,
+          "duration_ms": 0.032,
+          "tags": {
+            "jinja2.template_name": "base.html",
+            "jinja2.template_path": "templates/base.html",
+            "otel.scope.name": "opentelemetry.instrumentation.jinja2",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "b6448cf18512d010",
+          "parent_span_id": "81c5313c94ee6d90",
+          "operation_name": "GET /dashboard http send",
+          "start_time": 1764072423069108,
+          "duration_ms": 0.037,
+          "tags": {
+            "asgi.event.type": "http.response.start",
+            "http.status_code": 200,
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "b5eb2d1b2cc9168b",
+          "parent_span_id": "81c5313c94ee6d90",
+          "operation_name": "GET /dashboard http send",
+          "start_time": 1764072423069508,
+          "duration_ms": 0.016,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        },
+        {
+          "span_id": "4b53ce0eafd15115",
+          "parent_span_id": "81c5313c94ee6d90",
+          "operation_name": "GET /dashboard http send",
+          "start_time": 1764072423069609,
+          "duration_ms": 0.014,
+          "tags": {
+            "asgi.event.type": "http.response.body",
+            "otel.scope.name": "opentelemetry.instrumentation.fastapi",
+            "otel.scope.version": "0.59b0",
+            "span.kind": "internal"
+          },
+          "error": false
+        }
+      ],
+      "duration_breakdown": {
+        "other": 8.698,
+        "jinja2": 5.228999999999999
+      }
+    }
+  ],
+  "summary": {
+    "total_traces": 15,
+    "slow_trace_count": 0,
+    "error_trace_count": 7,
+    "p50_latency_ms": 10.14,
+    "p95_latency_ms": 269.305,
+    "p99_latency_ms": 269.305,
+    "avg_spans_per_trace": 11.333333333333334
+  }
+}
+
+=== RAG CONTEXT: SIMILAR PAST INCIDENTS ===
+
+Past Incident: INC-E48C9E9D
+Title: Rule-based analysis (AI unavailable)
+Root Cause: Error burst detected (118 errors in 5 minutes)
+Fix Applied: Investigate manually
+Outcome: ✓ Successful
+Similarity Score: 5/5
+
+---
+
+Past Incident: INC-1CDF7EC9
+Title: Rule-based analysis (AI unavailable)
+Root Cause: Error burst detected (118 errors in 5 minutes)
+Fix Applied: Investigate manually
+Outcome: ✓ Successful
+Similarity Score: 5/5
+
+---
+
+Past Incident: INC-TEST-001
+Title: Anomaly in core-athenamind service
+Root Cause: High memory usage
+Fix Applied: Increase memory allocation
+Outcome: ✓ Successful
+Similarity Score: 5/5
+
+
+=== YOUR TASK ===
+Analyze the current incident data AND learn from similar past incidents.
+If a past incident had the same root cause, mention it explicitly.
+If a past fix worked, recommend it.
+
+Generate a JSON response with these exact fields:
+{
+  "executive_summary": {
+    "title": "brief title",
+    "severity": "critical|high|medium|low",
+    "impact": "what broke",
+    "user_impact": "how users are affected"
+  },
+  "timeline": [
+    {"timestamp": "HH:MM:SS", "event": "what happened", "source": "prometheus|loki|jaeger"}
+  ],
+  "root_cause": {
+    "primary_cause": "the main issue",
+    "contributing_factors": ["factor1", "factor2"],
+    "evidence": [
+      {"type": "metric|log|trace", "description": "...", "value": "..."}
+    ],
+    "confidence_score": 0.0-1.0,
+    "similar_to_past_incident": "incident_id or null"
+  },
+  "technical_details": {
+    "affected_components": [{"component": "name", "status": "degraded|down"}],
+    "metrics_snapshot": {}
+  },
+  "impact_assessment": {
+    "severity": "high",
+    "users_affected": "estimate"
+  },
+  "remediation": {
+    "immediate_actions": [
+      {"action": "what to do", "command": "exact command", "estimated_time": "30s", "expected_impact": "fixes X"}
+    ],
+    "permanent_fixes": [
+      {"fix": "description", "priority": "P0|P1|P2"}
+    ]
+  },
+  "prevention": {
+    "code_changes": ["change1"],
+    "monitoring_enhancements": ["alert1"]
+  },
+  "potential_causes": [
+    {"hypothesis": "maybe this", "probability": 0.0-1.0, "evidence": ["proof"]}
+  ],
+  "confidence": {
+    "overall_score": 0.0-1.0,
+    "uncertainties": ["what we're not sure about"],
+    "recommendation": "what to do next"
+  }
+}
+
+IMPORTANT: Return ONLY valid JSON, no markdown, no explanation.
+
+AFTER generating the RCA, also provide learning metadata:
+- Is this incident worth learning from? (novel issue, clear root cause, actionable fix)
+- If yes, provide 3-5 relevant technical keywords (e.g., "memory-leak", "connection-pool", "rate-limit")
+
+Add these fields to your JSON response:
+{
+  ...,
+  "learning_metadata": {
+    "worth_learning": true/false,
+    "reason": "why this is/isn't worth storing",
+    "keywords": ["keyword1", "keyword2", "keyword3"]
+  }
+}

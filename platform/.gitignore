@@ -1,0 +1,24 @@
+# Environment
+.env
+backend/.env
+
+# Data directories
+backend/data/prompts/
+backend/data/responses/
+backend/data/*.db
+
+# Logs
+backend/logs/
+*.log
+
+# Docker volumes
+*-data/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE
+.vscode/
+.idea/

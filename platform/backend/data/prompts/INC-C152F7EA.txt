@@ -1,0 +1,266 @@
+You are an expert SRE analyzing an incident.
+
+CURRENT INCIDENT:
+Service: core-athenamind
+Detected: 2025-11-25T12:16:21.596940
+Alert: Anomaly detected - investigate observability data below
+
+=== DATA SUMMARY ===
+Logs: ERROR: 0, CRITICAL: 0, WARNING: 0, INFO: 0
+Traces: Slow: 0, Error: 0, Samples: 0
+Metrics: 6 host + 9 OTLP
+
+=== OBSERVABILITY DATA (LAST 5 MINUTES) ===
+
+PROMETHEUS METRICS (All Core Metrics):
+{
+  "host_metrics": {
+    "cpu_usage_percent": {
+      "max": 9.699999999997502,
+      "min": 7.302777777773969,
+      "avg": 8.548280423280232,
+      "current": 8.891666666665216,
+      "unit": "percent",
+      "status": "ok"
+    },
+    "memory_usage_percent": {
+      "max": 72.39218683946885,
+      "min": 68.84157015256443,
+      "avg": 70.05439482155198,
+      "current": 72.39218683946885,
+      "unit": "percent",
+      "status": "ok"
+    },
+    "disk_read_bytes_per_sec": {
+      "max": 2595412.1529282355,
+      "min": 16657.621920730693,
+      "avg": 478652.1575351962,
+      "current": 187596.8,
+      "unit": "bytes/sec",
+      "status": "ok"
+    },
+    "disk_write_bytes_per_sec": {
+      "max": 2836164.938831295,
+      "min": 1302484.583847205,
+      "avg": 1657361.1381170335,
+      "current": 1551564.8,
+      "unit": "bytes/sec",
+      "status": "ok"
+    },
+    "network_receive_bytes_per_sec": {
+      "max": 71752.34158861371,
+      "min": 2903.776289037763,
+      "avg": 16563.298465842643,
+      "current": 12070.004666977798,
+      "unit": "bytes/sec",
+      "status": "ok"
+    },
+    "network_transmit_bytes_per_sec": {
+      "max": 17259.99133362221,
+      "min": 3712.7953871279537,
+      "avg": 10140.478977224791,
+      "current": 8409.360624041603,
+      "unit": "bytes/sec",
+      "status": "ok"
+    }
+  },
+  "query_timestamp": "2025-11-25T12:16:21.885486+00:00",
+  "otlp_metrics": {
+    "http_requests_total": {
+      "max": 15.0,
+      "min": 15.0,
+      "avg": 15.0,
+      "current": 15.0,
+      "unit": "requests",
+      "status": "ok"
+    },
+    "http_error_rate_percent": {
+      "max": 46.666666666666664,
+      "min": 46.666666666666664,
+      "avg": 46.66666666666665,
+      "current": 46.666666666666664,
+      "unit": "percent",
+      "status": "critical"
+    },
+    "http_latency_p95_ms": {
+      "max": 312.5,
+      "min": 312.5,
+      "avg": 312.5,
+      "current": 312.5,
+      "unit": "milliseconds",
+      "status": "ok"
+    },
+    "http_latency_p99_ms": {
+      "max": 462.4999999999999,
+      "min": 462.4999999999999,
+      "avg": 462.4999999999999,
+      "current": 462.4999999999999,
+      "unit": "milliseconds",
+      "status": "ok"
+    },
+    "active_connections": {
+      "max": 0.0,
+      "min": 0.0,
+      "avg": 0.0,
+      "current": 0.0,
+      "unit": "connections",
+      "status": "ok"
+    },
+    "db_connections": {
+      "max": 8.0,
+      "min": 8.0,
+      "avg": 8.0,
+      "current": 8.0,
+      "unit": "connections",
+      "status": "ok"
+    },
+    "avg_request_size_bytes": {
+      "max": 246.0,
+      "min": 246.0,
+      "avg": 246.0,
+      "current": 246.0,
+      "unit": "bytes",
+      "status": "ok"
+    },
+    "avg_response_size_bytes": {
+      "max": 3812.214285714286,
+      "min": 3812.214285714286,
+      "avg": 3812.214285714285,
+      "current": 3812.214285714286,
+      "unit": "bytes",
+      "status": "ok"
+    },
+    "avg_response_time_ms": {
+      "max": 33.93333333333333,
+      "min": 33.93333333333333,
+      "avg": 33.933333333333316,
+      "current": 33.93333333333333,
+      "unit": "milliseconds",
+      "status": "ok"
+    }
+  },
+  "overall_health": "critical"
+}
+
+LOKI LOGS (All Errors/Critical/Warnings + Info Samples):
+{
+  "errors": [],
+  "critical": [],
+  "warnings": [],
+  "info_sample": []
+}
+
+JAEGER TRACES (All Slow/Error Traces + Samples with Spans):
+{
+  "slow_traces": [],
+  "error_traces": [],
+  "sample_traces_with_spans": [],
+  "summary": {
+    "total_traces": 0,
+    "slow_trace_count": 0,
+    "error_trace_count": 0,
+    "p50_latency_ms": 0,
+    "p95_latency_ms": 0,
+    "p99_latency_ms": 0,
+    "avg_spans_per_trace": 0
+  }
+}
+
+=== RAG CONTEXT: SIMILAR PAST INCIDENTS ===
+
+Past Incident: INC-E48C9E9D
+Title: Rule-based analysis (AI unavailable)
+Root Cause: Error burst detected (118 errors in 5 minutes)
+Fix Applied: Investigate manually
+Outcome: ✓ Successful
+Similarity Score: 5/5
+
+---
+
+Past Incident: INC-1CDF7EC9
+Title: Rule-based analysis (AI unavailable)
+Root Cause: Error burst detected (118 errors in 5 minutes)
+Fix Applied: Investigate manually
+Outcome: ✓ Successful
+Similarity Score: 5/5
+
+---
+
+Past Incident: INC-TEST-001
+Title: Anomaly in core-athenamind service
+Root Cause: High memory usage
+Fix Applied: Increase memory allocation
+Outcome: ✓ Successful
+Similarity Score: 5/5
+
+
+=== YOUR TASK ===
+Analyze the current incident data AND learn from similar past incidents.
+If a past incident had the same root cause, mention it explicitly.
+If a past fix worked, recommend it.
+
+Generate a JSON response with these exact fields:
+{
+  "executive_summary": {
+    "title": "brief title",
+    "severity": "critical|high|medium|low",
+    "impact": "what broke",
+    "user_impact": "how users are affected"
+  },
+  "timeline": [
+    {"timestamp": "HH:MM:SS", "event": "what happened", "source": "prometheus|loki|jaeger"}
+  ],
+  "root_cause": {
+    "primary_cause": "the main issue",
+    "contributing_factors": ["factor1", "factor2"],
+    "evidence": [
+      {"type": "metric|log|trace", "description": "...", "value": "..."}
+    ],
+    "confidence_score": 0.0-1.0,
+    "similar_to_past_incident": "incident_id or null"
+  },
+  "technical_details": {
+    "affected_components": [{"component": "name", "status": "degraded|down"}],
+    "metrics_snapshot": {}
+  },
+  "impact_assessment": {
+    "severity": "high",
+    "users_affected": "estimate"
+  },
+  "remediation": {
+    "immediate_actions": [
+      {"action": "what to do", "command": "exact command", "estimated_time": "30s", "expected_impact": "fixes X"}
+    ],
+    "permanent_fixes": [
+      {"fix": "description", "priority": "P0|P1|P2"}
+    ]
+  },
+  "prevention": {
+    "code_changes": ["change1"],
+    "monitoring_enhancements": ["alert1"]
+  },
+  "potential_causes": [
+    {"hypothesis": "maybe this", "probability": 0.0-1.0, "evidence": ["proof"]}
+  ],
+  "confidence": {
+    "overall_score": 0.0-1.0,
+    "uncertainties": ["what we're not sure about"],
+    "recommendation": "what to do next"
+  }
+}
+
+IMPORTANT: Return ONLY valid JSON, no markdown, no explanation.
+
+AFTER generating the RCA, also provide learning metadata:
+- Is this incident worth learning from? (novel issue, clear root cause, actionable fix)
+- If yes, provide 3-5 relevant technical keywords (e.g., "memory-leak", "connection-pool", "rate-limit")
+
+Add these fields to your JSON response:
+{
+  ...,
+  "learning_metadata": {
+    "worth_learning": true/false,
+    "reason": "why this is/isn't worth storing",
+    "keywords": ["keyword1", "keyword2", "keyword3"]
+  }
+}

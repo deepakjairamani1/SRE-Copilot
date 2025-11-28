@@ -1,0 +1,18 @@
+{
+  "incident_id": "INC-C032626D",
+  "title": "Core Athenamind Service Disruption",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-27T09:04:58.758545",
+  "root_cause": "Missing dependency: No module named 'fastapi'",
+  "fix_applied": "Install missing dependency",
+  "success": true,
+  "keywords": [
+    "http-error",
+    "dependency-management",
+    "missing-module",
+    "fastapi",
+    "python-dependency",
+    "service-disruption"
+  ],
+  "learning_reason": "Novel issue with clear root cause and actionable fix"
+}

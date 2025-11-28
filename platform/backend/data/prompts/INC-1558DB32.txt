@@ -1,0 +1,110 @@
+You are an expert SRE analyzing an incident.
+
+CURRENT INCIDENT:
+Service: core-athenamind
+Detected: 2025-11-25T13:55:27.824977
+Alert: Anomaly detected - investigate observability data below
+
+=== DATA SUMMARY ===
+Logs: ERROR: 0, CRITICAL: 0, WARNING: 0, INFO: 0
+Traces: Slow: 0, Error: 0, Samples: 0
+Metrics: 6 host + 9 OTLP
+
+=== OBSERVABILITY DATA (LAST 5 MINUTES) ===
+
+PROMETHEUS METRICS (Summarized - 🔴=critical, 🟡=warning, 🟢=ok):
+🟢 cpu_usage_percent: 13.76 percent (min:6.7, max:17.6, avg:9.8)
+🟢 memory_usage_percent: 74.76 percent (min:72.6, max:75.1, avg:74.0)
+🟢 disk_read_bytes_per_sec: 1076392.92 bytes/sec (min:2457.7, max:1076392.9, avg:150418.1)
+🟢 disk_write_bytes_per_sec: 1644079.60 bytes/sec (min:1111381.3, max:1644079.6, avg:1402027.9)
+🟢 network_receive_bytes_per_sec: 10787.12 bytes/sec (min:3267.4, max:17038.4, avg:8316.9)
+🟢 network_transmit_bytes_per_sec: 24808.05 bytes/sec (min:3933.7, max:53822.6, avg:14916.8)
+🔴 http_error_rate_percent: 47.06 percent (min:47.1, max:47.1, avg:47.1)
+🟢 http_latency_p95_ms: 287.50 milliseconds (min:287.5, max:287.5, avg:287.5)
+🟢 http_latency_p99_ms: 457.50 milliseconds (min:457.5, max:457.5, avg:457.5)
+🟢 avg_response_time_ms: 31.76 milliseconds (min:31.8, max:31.8, avg:31.8)
+
+LOKI LOGS (Unique messages with occurrence count):
+No error/critical/warning logs
+
+JAEGER TRACES (Key traces and summary):
+No traces found
+
+=== RAG CONTEXT: SIMILAR PAST INCIDENTS ===
+No similar past incidents found in knowledge base.
+
+=== YOUR TASK ===
+Provide comprehensive RCA analysis:
+1. What is going RIGHT (healthy metrics, normal behavior)
+2. What is going WRONG (anomalies, errors, degradation)
+3. Root cause with evidence from metrics/logs/traces
+4. Immediate actions to resolve
+5. Long-term prevention
+
+Learn from similar past incidents - if a past fix worked, recommend it.
+
+Generate a JSON response with these exact fields:
+{
+  "executive_summary": {
+    "title": "brief title",
+    "severity": "critical|high|medium|low",
+    "impact": "what broke",
+    "user_impact": "how users are affected"
+  },
+  "timeline": [
+    {"timestamp": "HH:MM:SS", "event": "what happened", "source": "prometheus|loki|jaeger"}
+  ],
+  "root_cause": {
+    "primary_cause": "the main issue",
+    "contributing_factors": ["factor1", "factor2"],
+    "evidence": [
+      {"type": "metric|log|trace", "description": "...", "value": "..."}
+    ],
+    "confidence_score": 0.0-1.0,
+    "similar_to_past_incident": "incident_id or null"
+  },
+  "technical_details": {
+    "affected_components": [{"component": "name", "status": "degraded|down"}],
+    "metrics_snapshot": {}
+  },
+  "impact_assessment": {
+    "severity": "high",
+    "users_affected": "estimate"
+  },
+  "remediation": {
+    "immediate_actions": [
+      {"action": "what to do", "command": "exact command", "estimated_time": "30s", "expected_impact": "fixes X"}
+    ],
+    "permanent_fixes": [
+      {"fix": "description", "priority": "P0|P1|P2"}
+    ]
+  },
+  "prevention": {
+    "code_changes": ["change1"],
+    "monitoring_enhancements": ["alert1"]
+  },
+  "potential_causes": [
+    {"hypothesis": "maybe this", "probability": 0.0-1.0, "evidence": ["proof"]}
+  ],
+  "confidence": {
+    "overall_score": 0.0-1.0,
+    "uncertainties": ["what we're not sure about"],
+    "recommendation": "what to do next"
+  }
+}
+
+IMPORTANT: Return ONLY valid JSON, no markdown, no explanation.
+
+AFTER generating the RCA, also provide learning metadata:
+- Is this incident worth learning from? (novel issue, clear root cause, actionable fix)
+- If yes, provide 3-5 relevant technical keywords (e.g., "memory-leak", "connection-pool", "rate-limit")
+
+Add these fields to your JSON response:
+{
+  ...,
+  "learning_metadata": {
+    "worth_learning": true/false,
+    "reason": "why this is/isn't worth storing",
+    "keywords": ["keyword1", "keyword2", "keyword3"]
+  }
+}

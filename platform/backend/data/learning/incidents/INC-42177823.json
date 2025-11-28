@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-42177823",
+  "title": "Database Connection Refused",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-27T06:57:01.931213",
+  "root_cause": "database connection issue",
+  "fix_applied": "restart database server",
+  "success": true,
+  "keywords": [
+    "database-connection",
+    "tcp-ip-connections",
+    "http-error",
+    "retry-mechanism",
+    "monitoring"
+  ],
+  "learning_reason": "novel issue with clear root cause and actionable fix"
+}

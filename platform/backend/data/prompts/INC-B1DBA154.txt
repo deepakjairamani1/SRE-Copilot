@@ -1,0 +1,118 @@
+You are an expert SRE analyzing an incident.
+
+CURRENT INCIDENT:
+Service: core-athenamind
+Detected: 2025-11-25T13:43:17.789458
+Alert: Anomaly detected - investigate observability data below
+
+=== DATA SUMMARY ===
+Logs: ERROR: 8, CRITICAL: 0, WARNING: 0, INFO: 1
+Traces: Slow: 0, Error: 1, Samples: 2
+Metrics: 6 host + 9 OTLP
+
+=== OBSERVABILITY DATA (LAST 5 MINUTES) ===
+
+PROMETHEUS METRICS (Summarized - 🔴=critical, 🟡=warning, 🟢=ok):
+🟢 cpu_usage_percent: 9.25 percent (min:9.2, max:12.1, avg:10.5)
+🟢 memory_usage_percent: 73.69 percent (min:72.0, max:73.7, avg:72.8)
+🟢 disk_read_bytes_per_sec: 1115241.44 bytes/sec (min:2730.6, max:1115241.4, avg:214260.4)
+🟢 disk_write_bytes_per_sec: 2463689.59 bytes/sec (min:1182378.7, max:2744866.1, avg:1535440.9)
+🟢 network_receive_bytes_per_sec: 15839.79 bytes/sec (min:3273.3, max:19670.1, avg:8848.1)
+🟢 network_transmit_bytes_per_sec: 13389.21 bytes/sec (min:4105.5, max:24183.8, avg:10860.6)
+🔴 http_error_rate_percent: 46.67 percent (min:46.7, max:46.7, avg:46.7)
+🟢 http_latency_p95_ms: 312.50 milliseconds (min:312.5, max:312.5, avg:312.5)
+🟢 http_latency_p99_ms: 462.50 milliseconds (min:462.5, max:462.5, avg:462.5)
+🟢 avg_response_time_ms: 33.93 milliseconds (min:33.9, max:33.9, avg:33.9)
+
+LOKI LOGS (Unique messages with occurrence count):
+
+ERROR:
+  [2x] Request failed: GET /api/trending
+  [2x] HTTP 500: Database error
+  [2x] Unexpected database error: 500: Database error
+  [2x] Database error fetching trending posts: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accept
+
+JAEGER TRACES (Key traces and summary):
+
+ERROR TRACES:
+  - unknown: 14ms, error:True
+
+=== RAG CONTEXT: SIMILAR PAST INCIDENTS ===
+No similar past incidents found in knowledge base.
+
+=== YOUR TASK ===
+Provide comprehensive RCA analysis:
+1. What is going RIGHT (healthy metrics, normal behavior)
+2. What is going WRONG (anomalies, errors, degradation)
+3. Root cause with evidence from metrics/logs/traces
+4. Immediate actions to resolve
+5. Long-term prevention
+
+Learn from similar past incidents - if a past fix worked, recommend it.
+
+Generate a JSON response with these exact fields:
+{
+  "executive_summary": {
+    "title": "brief title",
+    "severity": "critical|high|medium|low",
+    "impact": "what broke",
+    "user_impact": "how users are affected"
+  },
+  "timeline": [
+    {"timestamp": "HH:MM:SS", "event": "what happened", "source": "prometheus|loki|jaeger"}
+  ],
+  "root_cause": {
+    "primary_cause": "the main issue",
+    "contributing_factors": ["factor1", "factor2"],
+    "evidence": [
+      {"type": "metric|log|trace", "description": "...", "value": "..."}
+    ],
+    "confidence_score": 0.0-1.0,
+    "similar_to_past_incident": "incident_id or null"
+  },
+  "technical_details": {
+    "affected_components": [{"component": "name", "status": "degraded|down"}],
+    "metrics_snapshot": {}
+  },
+  "impact_assessment": {
+    "severity": "high",
+    "users_affected": "estimate"
+  },
+  "remediation": {
+    "immediate_actions": [
+      {"action": "what to do", "command": "exact command", "estimated_time": "30s", "expected_impact": "fixes X"}
+    ],
+    "permanent_fixes": [
+      {"fix": "description", "priority": "P0|P1|P2"}
+    ]
+  },
+  "prevention": {
+    "code_changes": ["change1"],
+    "monitoring_enhancements": ["alert1"]
+  },
+  "potential_causes": [
+    {"hypothesis": "maybe this", "probability": 0.0-1.0, "evidence": ["proof"]}
+  ],
+  "confidence": {
+    "overall_score": 0.0-1.0,
+    "uncertainties": ["what we're not sure about"],
+    "recommendation": "what to do next"
+  }
+}
+
+IMPORTANT: Return ONLY valid JSON, no markdown, no explanation.
+
+AFTER generating the RCA, also provide learning metadata:
+- Is this incident worth learning from? (novel issue, clear root cause, actionable fix)
+- If yes, provide 3-5 relevant technical keywords (e.g., "memory-leak", "connection-pool", "rate-limit")
+
+Add these fields to your JSON response:
+{
+  ...,
+  "learning_metadata": {
+    "worth_learning": true/false,
+    "reason": "why this is/isn't worth storing",
+    "keywords": ["keyword1", "keyword2", "keyword3"]
+  }
+}
