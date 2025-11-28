@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { cn } from '../../lib/utils'
 
 interface ProgressBarProps {
@@ -17,16 +16,13 @@ export function ProgressBar({
   return (
     <div className={cn('w-full', className)}>
       <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ backgroundColor: color }}
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+        <div
+          className="h-full rounded-full transition-all duration-500 ease-out"
+          style={{ backgroundColor: color, width: `${progress}%` }}
         />
       </div>
       {showLabel && (
-        <p className="text-xs text-text-secondary mt-1 text-right">
+        <p className="text-xs text-gray-600 mt-1 text-right">
           {progress}%
         </p>
       )}
