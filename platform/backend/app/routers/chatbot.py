@@ -42,7 +42,13 @@ async def send_message(request: ChatMessageRequest):
         session_id = request.conversation_id or session_manager.create_session()
         final_text = None
         updated_state = None
-        final_text = await call_agent_async(request.message)
+        
+        # Check if user is asking for metrics/CPU/prometheus related queries
+        query_lower = request.message.lower()
+        if any(keyword in query_lower for keyword in ['cpu', 'memory', 'metrics', 'prometheus', 'prom', 'performance', 'system']):
+            logger.info("Detected metrics-related query, should use prometheus tool")
+        
+        final_text = await call_agent_async(request.message)        
         # Save state back to Redis
         if updated_state is not None:
             session_manager.update_session(session_id, updated_state)
@@ -55,5 +61,6 @@ async def send_message(request: ChatMessageRequest):
         )
 
     except Exception as e:
+        logger.error(f"Error in send_message: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 

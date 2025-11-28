@@ -6,7 +6,7 @@ from google.adk.sessions import InMemorySessionService
 from .prompt import SYSTEM_PROMPT
 from google.genai import types
 import logging
-from .tools import loki_tools
+from .tools import tools
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ SESSION_ID = "session_001"
 # session_service = InMemorySessionService()
 my_llm_agent = LlmAgent(
     name="ModelCallbackAgent",
-    tools=loki_tools,
+    tools=tools,
 
     model="gemini-2.0-flash",
     instruction=SYSTEM_PROMPT,
