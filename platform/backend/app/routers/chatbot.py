@@ -6,6 +6,7 @@ from google.genai import types
 from ..services.redis_session_manager import session_manager
 
 from ..adk.agent import call_agent_async
+import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,8 @@ async def send_message(request: ChatMessageRequest):
         updated_state = None
         logger.info(("session_state", session_state))
         logger.info("gruhrhbeifdop")
-        final_text = await call_agent_async(request.message)
+        final_text = response = asyncio.run(call_agent_async(request.message))
+
         # Save state back to Redis
         if updated_state is not None:
             session_manager.update_session(session_id, updated_state)
