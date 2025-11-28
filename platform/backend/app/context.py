@@ -18,6 +18,21 @@ class Context(BaseSettings):
     # API keys and secrets
     ANTHROPIC_API_KEY: str = ""
     
+    # AWS Configuration
+    AWS_ACCESS_KEY_ID: str = ""
+    AWS_SECRET_ACCESS_KEY: str = ""
+    AWS_REGION: str = "us-east-1"
+    
+    # LLM Configuration
+    LLM_PROVIDER: str = "bedrock"
+    LLM_MODEL: str = "us.anthropic.claude-3-5-sonnet-20241022-v2:0"
+    
+    # Vector DB Configuration
+    CHROMA_HOST: str = "chromadb"
+    CHROMA_PORT: int = 8000
+    VECTOR_DB_PATH: str = "data/vector_db"
+    SIMILARITY_THRESHOLD: float = 0.75
+    
     # Environment
     ENV: str = "dev"
     
@@ -33,6 +48,8 @@ class Context(BaseSettings):
         # Mask sensitive fields
         if config.get("ANTHROPIC_API_KEY"):
             config["ANTHROPIC_API_KEY"] = f"{config['ANTHROPIC_API_KEY'][:8]}***"
+        if config.get("AWS_SECRET_ACCESS_KEY"):
+            config["AWS_SECRET_ACCESS_KEY"] = f"{config['AWS_SECRET_ACCESS_KEY'][:8]}***"
         
         return {
             "service": "sre-copilot-api",

@@ -74,6 +74,10 @@ def get_incident(incident_id: str, db: Session = Depends(get_db)):
     rca_report = incident.rca_report_json or {}
     observability_data = rca_report.get("observability_data", {})
     
+    # Extract similar incidents from semantic processing
+    semantic_processing = incident.semantic_processing or {}
+    similar_incidents = semantic_processing.get('similar_incidents', [])
+    
     return {
         "incident_id": incident.incident_id,
         "service": incident.service,
@@ -88,6 +92,7 @@ def get_incident(incident_id: str, db: Session = Depends(get_db)):
         "cost_usd": incident.cost_usd,
         "rca_report": rca_report,
         "observability_data": observability_data,
+        "similar_incidents": similar_incidents,
         "investigation_steps": incident.investigation_steps,
         "llm_provider": incident.llm_provider,
         "tokens_used": incident.tokens_used

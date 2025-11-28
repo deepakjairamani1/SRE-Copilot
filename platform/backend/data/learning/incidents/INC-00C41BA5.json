@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-00C41BA5",
+  "title": "High HTTP Error Rate in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T18:50:42.202110",
+  "root_cause": "Elevated HTTP error rate without corresponding system resource issues",
+  "fix_applied": "Restart application server",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "connection-pool",
+    "zero-connections",
+    "application-restart",
+    "circuit-breaker"
+  ],
+  "learning_reason": "Clear pattern of connection handling issues with specific metrics and actionable fixes"
+}

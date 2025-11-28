@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-650C08FA",
+  "title": "High HTTP Error Rate with Memory Pressure",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T18:07:40.363472",
+  "root_cause": "Memory exhaustion leading to service instability",
+  "fix_applied": "Increase memory limits",
+  "success": true,
+  "keywords": [
+    "memory-leak",
+    "oom-killer",
+    "http-errors",
+    "swap-usage",
+    "resource-limits"
+  ],
+  "learning_reason": "Clear pattern of memory-related issues with specific metrics and logs showing the progression"
+}

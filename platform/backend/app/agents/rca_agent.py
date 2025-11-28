@@ -11,6 +11,7 @@ from app.clients.prometheus_client import PrometheusClient
 from app.clients.loki_client import LokiClient
 from app.clients.jaeger_client import JaegerClient
 from app.agents.bedrock_integration import call_bedrock
+from app.agents.vector_db_agent import VectorDBAgent
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class RCAAgent:
         self.prometheus_client = PrometheusClient(ctx.PROMETHEUS_URL)
         self.loki_client = LokiClient(ctx.LOKI_URL)
         self.jaeger_client = JaegerClient(ctx.JAEGER_QUERY_URL)
+        self.vector_db_agent = VectorDBAgent()
         self.timeout = 60
         self.steps = []
         
@@ -165,6 +167,16 @@ class RCAAgent:
                 "cost_usd": self._calculate_cost(rca_report),
                 "generated_at": datetime.now(timezone.utc).isoformat()
             }
+            
+            # Process semantics for learning using vector DB
+            logger.info(f"[{incident_id}] Starting semantic processing...")
+            semantic_result = await self._process_incident_semantics(
+                incident_id, incident_data, rca_report
+            )
+            logger.info(f"[{incident_id}] Semantic processing result: {semantic_result}")
+            
+            # Add semantic info to result
+            investigation_result["semantic_processing"] = semantic_result
             
             # Save to database & JSON
             await self._save_incident_for_learning(incident_data, rca_report, investigation_result)
@@ -965,7 +977,8 @@ Similarity Score: {inc['similarity_score']}/5
                     rca_report_json=full_rca_report,
                     investigation_steps=investigation_result.get("investigation_steps", []),
                     llm_provider=self.llm_provider,
-                    tokens_used=rca_report.get("_tokens_used", 0)
+                    tokens_used=rca_report.get("_tokens_used", 0),
+                    semantic_processing=investigation_result.get("semantic_processing", {})
                 )
                 db.add(db_incident)
                 logger.debug(f"[{incident_id}] Committing to database...")
@@ -1092,3 +1105,61 @@ Similarity Score: {inc['similarity_score']}/5
             },
             "_tokens_used": 0
         }
+    async def _process_incident_semantics(self, incident_id: str, incident_data: Dict, 
+                                         rca_report: Dict) -> Dict[str, Any]:
+        """Process incident semantics for learning and similarity"""
+        try:
+            await self._log_step("act", "🧠 Processing incident semantics...")
+            
+            # Build complete incident data for embedding
+            complete_incident = {
+                'service': incident_data.get('service'),
+                'severity': rca_report.get('executive_summary', {}).get('severity', 'unknown'),
+                'detected_at': incident_data.get('detected_at'),
+                'rca_report': rca_report
+            }
+            
+            # Process semantics using vector DB
+            semantic_result = await self.vector_db_agent.process_incident_semantics(
+                incident_id, complete_incident
+            )
+            
+            if semantic_result.get('error'):
+                await self._log_step("act", f"  ✗ Semantic processing failed: {semantic_result['error']}")
+                return semantic_result
+            
+            similar_count = len(semantic_result.get('similar_incidents', []))
+            await self._log_step("act", f"  ✓ Semantics processed, found {similar_count} similar incidents")
+            
+            return semantic_result
+            
+        except Exception as e:
+            logger.error(f"Semantic processing failed: {e}")
+            await self._log_step("act", f"  ✗ Semantic processing error: {str(e)}")
+            return {'error': str(e)}
+
+    def _summarize_for_embedding(self, prometheus_data: Dict, loki_data: Dict, 
+                                jaeger_data: Dict) -> str:
+        """Create summary text for embedding generation"""
+        components = []
+        
+        # Add critical metrics
+        for metric_type in ['host_metrics', 'otlp_metrics']:
+            metrics = prometheus_data.get(metric_type, {})
+            for name, data in metrics.items():
+                if data.get('status') in ['critical', 'warning']:
+                    components.append(f"{name}: {data.get('status')}")
+        
+        # Add error logs
+        logs = loki_data.get('logs', {})
+        error_count = len(logs.get('error_logs', []))
+        if error_count > 0:
+            components.append(f"error_logs: {error_count}")
+        
+        # Add slow traces
+        traces = jaeger_data.get('traces', {})
+        slow_count = len(traces.get('slow_traces', []))
+        if slow_count > 0:
+            components.append(f"slow_traces: {slow_count}")
+        
+        return ' | '.join(components) if components else 'normal_operation'

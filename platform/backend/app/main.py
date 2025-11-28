@@ -5,7 +5,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .context import get_context
-from .routers import incidents, analytics, rca, observability
+from .routers import incidents, analytics, rca, observability, vector_db
 
 # Create logs directory
 Path('logs').mkdir(exist_ok=True)
@@ -81,3 +81,4 @@ app.include_router(incidents.router)
 app.include_router(analytics.router)
 app.include_router(rca.router)
 app.include_router(observability.router)
+app.include_router(vector_db.router)

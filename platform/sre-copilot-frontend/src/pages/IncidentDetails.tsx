@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { RemediationActions } from '../components/features/RemediationActions'
 import { IncidentTimeline } from '../components/features/IncidentTimeline'
+import { SimilarIncidents } from '../components/features/SimilarIncidents'
 import { useIncidentDetails } from '../hooks/useIncidents'
 import { 
   ArrowLeft, 
@@ -391,6 +392,13 @@ export default function IncidentDetails() {
               )}
             </div>
           </Card>
+        )}
+
+        {/* Similar Incidents - Full Width */}
+        {incident.similar_incidents && incident.similar_incidents.length > 0 && (
+          <SimilarIncidents 
+            similarIncidents={incident.similar_incidents}
+          />
         )}
 
         {/* Confidence & Learning */}

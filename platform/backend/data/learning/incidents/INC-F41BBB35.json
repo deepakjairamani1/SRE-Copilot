@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-F41BBB35",
+  "title": "Elevated HTTP Error Rate (33.33%) in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T18:35:55.254780",
+  "root_cause": "Elevated HTTP error rate without corresponding system resource issues",
+  "fix_applied": "Enable detailed error logging",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "application-error",
+    "service-degradation",
+    "error-handling",
+    "monitoring-gap"
+  ],
+  "learning_reason": "Clear error pattern with normal system metrics indicates potential architectural or application-level issue"
+}

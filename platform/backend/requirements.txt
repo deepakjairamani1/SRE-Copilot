@@ -10,3 +10,4 @@ anthropic
 openai
 python-dotenv
 boto3
+chromadb
