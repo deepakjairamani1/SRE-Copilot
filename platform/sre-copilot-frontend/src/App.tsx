@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import IncidentsList from './pages/IncidentsList'
 import IncidentDetails from './pages/IncidentDetails'
 import Investigate from './pages/Investigate'
+import ObservabilityDashboard from './pages/ObservabilityDashboard'
 import NotFound from './pages/NotFound'
 import { ComponentShowcase } from './pages/ComponentShowcase'
 import { APITest } from './pages/APITest'
@@ -31,6 +32,7 @@ function App() {
             <Route path="/incidents" element={<IncidentsList />} />
             <Route path="/incidents/:incident_id" element={<IncidentDetails />} />
             <Route path="/investigate" element={<Investigate />} />
+            <Route path="/observability" element={<ObservabilityDashboard />} />
             <Route path="/showcase" element={<ComponentShowcase />} />
             <Route path="/api-test" element={<APITest />} />
             <Route path="*" element={<NotFound />} />

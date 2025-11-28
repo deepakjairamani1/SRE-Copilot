@@ -26,6 +26,9 @@ export function Header() {
             <Link to="/investigate" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               Investigate
             </Link>
+            <Link to="/observability" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+              Observability
+            </Link>
           </nav>
           
           <div className="flex items-center gap-3">
