@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from google.adk.agents import LlmAgent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
-from .prompt import SYSTEM_PROMPT
+from .prompt_v2 import SYSTEM_PROMPT
 from google.genai import types
 import logging
 from .tools import tools
