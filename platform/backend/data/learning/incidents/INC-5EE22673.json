@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-5EE22673",
+  "title": "100% HTTP Error Rate in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T16:39:02.391594",
+  "root_cause": "Application-level failure causing all HTTP requests to error while infrastructure remains healthy",
+  "fix_applied": "Restart application service",
+  "success": true,
+  "keywords": [
+    "http-errors",
+    "application-failure",
+    "error-handling",
+    "monitoring-gap",
+    "observability"
+  ],
+  "learning_reason": "Clear pattern of application failure with healthy infrastructure, good case study for error handling"
+}
