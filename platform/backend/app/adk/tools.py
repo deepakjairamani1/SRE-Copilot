@@ -2,6 +2,7 @@ from google.adk.tools import FunctionTool, ToolContext
 from google.adk.agents.callback_context import CallbackContext
 from app.clients.loki_client import LokiClient
 import logging
+from google.adk.tools import FunctionTool
 
 logger = logging.getLogger(__name__)
 loki_client = LokiClient(base_url="http://18.211.38.10:3100")
@@ -83,26 +84,42 @@ async def loki_fetch_by_trace(tool_context: ToolContext, trace_id: str, **kwargs
         return {"error": f"Loki trace fetch failed: {str(e)}"}
 
 
+loki_fetch_logs_tool = FunctionTool(
+    name="loki_fetch_logs",
+    description="Fetch Loki logs for a given time range. time_range='5m' by default.",
+    input_schema={
+        "type": "object",
+        "properties": {
+            "time_range": {"type": "string"}
+        },
+        "required": []
+    },
+    func=loki_fetch_logs
+)
+
+loki_fetch_error_logs_tool = FunctionTool(
+    name="loki_fetch_error_logs",
+    description="Fetch only ERROR/CRITICAL logs from Loki.",
+    input_schema={"type": "object", "properties": {}},
+    func=loki_fetch_error_logs
+)
+
+loki_fetch_by_trace_tool = FunctionTool(
+    name="loki_fetch_by_trace",
+    description="Fetch logs based on trace_id.",
+    input_schema={
+        "type": "object",
+        "properties": {
+            "trace_id": {"type": "string"}
+        },
+        "required": ["trace_id"]
+    },
+    func=loki_fetch_by_trace
+)
+
 loki_tools = [
-loki_fetch_logs,
-loki_fetch_error_logs,
-loki_fetch_by_trace,
+    loki_fetch_logs_tool,
+    loki_fetch_error_logs_tool,
+    loki_fetch_by_trace_tool
 ]
 
-
-
-def loki_callback(callback_context: CallbackContext, **kwargs):
-    last_summary = callback_context.state.get("temp:loki_summary")
-    last_errors = callback_context.state.get("temp:loki_errors")
-    last_trace = callback_context.state.get("temp:loki_trace")
-
-    if last_summary:
-        print("[Callback] Last summary:", last_summary)
-
-    if last_errors:
-        print("[Callback] Last errors:", last_errors)
-
-    if last_trace:
-        print("[Callback] Last trace info:", last_trace)
-
-    return None
