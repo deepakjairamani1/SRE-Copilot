@@ -70,7 +70,7 @@ export function SimilarIncidents({ similarIncidents = [], isLoading = false }: S
           <Brain className="w-6 h-6 text-purple-600" />
           <h2 className="text-2xl font-bold text-gray-900">Similar Incidents (AI Semantic Analysis)</h2>
         </div>
-        <Badge variant="info" className="flex items-center gap-1">
+        <Badge variant="ok" className="flex items-center gap-1">
           <Zap className="w-3 h-3" />
           {similarIncidents.length} Found
         </Badge>
