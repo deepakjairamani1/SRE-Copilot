@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "./Button";
 import { API_BASE_URL } from "../../config";
 
@@ -17,11 +17,13 @@ export const ChatBot: React.FC<ChatBotProps> = ({
   apiBaseUrl = API_BASE_URL,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [size, setSize] = useState({ width: 320, height: 400 });
+  const [isResizing, setIsResizing] = useState(false);
+  const chatRef = useRef<HTMLDivElement>(null);
 
   const getOrCreateConversationId = () => {
     let id = localStorage.getItem('chatbot_conversation_id');
@@ -37,6 +39,29 @@ export const ChatBot: React.FC<ChatBotProps> = ({
       setConversationId(getOrCreateConversationId());
     }
   }, [isOpen, conversationId]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsResizing(true);
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = size.width;
+    const startHeight = size.height;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newWidth = Math.max(300, startWidth + (startX - e.clientX));
+      const newHeight = Math.max(300, startHeight + (startY - e.clientY));
+      setSize({ width: newWidth, height: newHeight });
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
 
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -109,30 +134,32 @@ export const ChatBot: React.FC<ChatBotProps> = ({
 
       {/* Chat Window */}
       {isOpen && (
-        <div className={`fixed bg-white border border-gray-300 shadow-xl z-50 flex flex-col ${
-          isFullScreen 
-            ? 'inset-0 rounded-none' 
-            : 'bottom-20 right-4 w-80 h-96 rounded-lg'
-        }`}>
+        <div 
+          ref={chatRef}
+          className="fixed bg-white border border-gray-300 shadow-xl z-50 flex flex-col rounded-lg"
+          style={{
+            bottom: '80px',
+            right: '16px',
+            width: `${size.width}px`,
+            height: `${size.height}px`,
+            cursor: isResizing ? 'nw-resize' : 'default'
+          }}
+        >
+          {/* Resize Handle */}
+          <div
+            className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize bg-gray-400 opacity-50 hover:opacity-75"
+            onMouseDown={handleMouseDown}
+          />
+          
           {/* Header */}
-          <div className={`bg-blue-600 text-white p-3 flex justify-between items-center ${
-            isFullScreen ? 'rounded-none' : 'rounded-t-lg'
-          }`}>
+          <div className="bg-blue-600 text-white p-3 flex justify-between items-center rounded-t-lg">
             <span className="font-medium">SRE Assistant</span>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setIsFullScreen(!isFullScreen)}
-                className="text-white hover:text-gray-200"
-              >
-                {isFullScreen ? '⬇' : '⬆'}
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-white hover:text-gray-200"
-              >
-                ✕
-              </button>
-            </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-white hover:text-gray-200"
+            >
+              ✕
+            </button>
           </div>
 
           {/* Messages */}

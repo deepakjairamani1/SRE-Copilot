@@ -1,9 +1,10 @@
-from google.adk.tools import Tool, ToolContext
+from google.adk.tools import FunctionTool, ToolContext
 from google.adk.agents.callback_context import CallbackContext
-from google.adk.types import Part, Content
-from .loki_client import LokiClient  # your async Loki client
+from app.clients.loki_client import LokiClient
+import logging
 
-loki_client = LokiClient(base_url="http://loki:3100")
+logger = logging.getLogger(__name__)
+loki_client = LokiClient(base_url="http://18.211.38.10:3100")
 import json
 
 async def loki_fetch_logs(tool_context: ToolContext, time_range: str = "5m", **kwargs):
@@ -11,6 +12,7 @@ async def loki_fetch_logs(tool_context: ToolContext, time_range: str = "5m", **k
     Fetch logs from Loki and store summary in ToolContext state.
     """
     try:
+        logger.info(f"Fetching logs for last {time_range}")
         results = await loki_client.query_logs(time_range=time_range)
 
         # Extract summary
@@ -39,6 +41,7 @@ async def loki_fetch_error_logs(tool_context: ToolContext, **_):
     Fetch only ERROR and CRITICAL logs.
     """
     try:
+        logger.info("Fetching error logs")
         results = await loki_client.query_error_logs_only()
 
         summary = {
@@ -63,6 +66,7 @@ async def loki_fetch_by_trace(tool_context: ToolContext, trace_id: str, **kwargs
     Fetch all logs for a given Trace ID and store them in state.
     """
     try:
+        logger.info(f"Fetching logs for trace: {trace_id}")
         logs = await loki_client.query_by_trace_id(trace_id)
 
         tool_context.state["temp:loki_trace"] = {
@@ -80,9 +84,9 @@ async def loki_fetch_by_trace(tool_context: ToolContext, trace_id: str, **kwargs
 
 
 loki_tools = [
-    Tool(name="loki_fetch_logs", code=loki_fetch_logs),
-    Tool(name="loki_fetch_error_logs", code=loki_fetch_error_logs),
-    Tool(name="loki_fetch_by_trace", code=loki_fetch_by_trace),
+loki_fetch_logs,
+loki_fetch_error_logs,
+loki_fetch_by_trace,
 ]
 
 

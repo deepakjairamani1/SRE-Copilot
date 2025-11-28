@@ -40,14 +40,9 @@ async def send_message(request: ChatMessageRequest):
     """
     try:
         session_id = request.conversation_id or session_manager.create_session()
-        session_state = session_manager.get_session(session_id)
-        # user_message = types.Content(request.message)
-        # content = types.Content(role='user', parts=[types.Part(text=request.message)])
-        # logger.info((user_message, "frrgtyhujyh"))
         final_text = None
         updated_state = None
         final_text = await call_agent_async(request.message)
-
         # Save state back to Redis
         if updated_state is not None:
             session_manager.update_session(session_id, updated_state)
