@@ -12,10 +12,12 @@ import {
 import { useState } from 'react'
 
 interface Action {
-  action: string
+  action?: string
+  fix?: string
   command?: string
   estimated_time?: string
   impact?: string
+  expected_impact?: string
   priority?: string
 }
 
@@ -89,9 +91,9 @@ export function RemediationActions({ immediateActions = [], permanentFixes = [] 
                       <span>~{action.estimated_time}</span>
                     </div>
                   )}
-                  {action.impact && (
+                  {(action.impact || action.expected_impact) && (
                     <Badge variant="warning">
-                      Impact: {action.impact}
+                      Impact: {action.impact || action.expected_impact}
                     </Badge>
                   )}
                 </div>
@@ -115,7 +117,7 @@ export function RemediationActions({ immediateActions = [], permanentFixes = [] 
                   {index + 1}
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-gray-900">{fix.action}</p>
+                  <p className="font-medium text-gray-900">{fix.fix || fix.action}</p>
                   {fix.priority && (
                     <Badge variant="high" className="mt-2">
                       {fix.priority}

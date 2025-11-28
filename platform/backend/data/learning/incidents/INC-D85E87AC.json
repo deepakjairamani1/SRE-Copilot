@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-D85E87AC",
+  "title": "Database Connection Failure Causing 100% Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T16:35:23.116622",
+  "root_cause": "PostgreSQL database connection failure on localhost:5432",
+  "fix_applied": "Start PostgreSQL service",
+  "success": true,
+  "keywords": [
+    "database-connection",
+    "postgresql",
+    "connection-refused",
+    "http-500",
+    "service-availability",
+    "configuration-error",
+    "connection-pooling"
+  ],
+  "learning_reason": "Common failure pattern with clear symptoms and resolution steps"
+}
