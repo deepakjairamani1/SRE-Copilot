@@ -2,6 +2,10 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 import logging
+from google.adk import Content
+from services.redis_session_manager import session_manager
+
+from adk.agent import runner
 
 logger = logging.getLogger(__name__)
 
@@ -28,27 +32,41 @@ class ChatMessageResponse(BaseModel):
 @router.post("/message", response_model=ChatMessageResponse)
 async def send_message(request: ChatMessageRequest):
     """
-    Send a message to the chatbot and get a response.
-    
-    Args:
-        request: ChatMessageRequest containing the user message and optional conversation_id
-    
-    Returns:
-        ChatMessageResponse with the chatbot's response
+    Handle user message using ADK runner.
     """
     try:
-        #
-        
-        
-        result = {}
-        return ChatMessageResponse(**result)
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error in send_message endpoint: {str(e)}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to process message: {str(e)}"
+        session_id = request.conversation_id or session_manager.create_session()
+        session_state = session_manager.get_session(session_id)
+
+        user_message = Content.text(request.message)
+
+        final_text = None
+        updated_state = None
+
+        async for event in runner.run_async(
+            user_id="USER",
+            session_id=session_id,
+            new_message=user_message,
+            state_delta=session_state
+        ):
+            # Capture final logical response
+            if event.is_final_response():
+                if event.content and event.content.parts:
+                    final_text = event.content.parts[0].text
+
+            # Capture updated session state
+            if event.state is not None:
+                updated_state = event.state
+
+        # Save state back to Redis
+        if updated_state is not None:
+            session_manager.update_session(session_id, updated_state)
+
+        return ChatMessageResponse(
+            conversation_id=session_id,
+            response=final_text or "Unable to respond right now."
         )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 

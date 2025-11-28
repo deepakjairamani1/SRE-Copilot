@@ -9,4 +9,10 @@ redis
 anthropic
 openai
 python-dotenv
-google-generativeai
+google-adk
+redis
+python-dotenv
+
+pydantic
+pydantic-settings
+
