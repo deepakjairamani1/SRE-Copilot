@@ -2,13 +2,15 @@ import os
 import logging
 from dotenv import load_dotenv
 
-from google.adk.agents import LlmAgent
+from google.adk.agents import Agent
+from google.adk.tools import Tool
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
 from .prompt import SYSTEM_PROMPT
-from .tools import tool_context  # contains Loki tool definitions
+from .tools import loki_tools
+# contains Loki tool definitions
 
 logger = logging.getLogger(__name__)
 
@@ -30,13 +32,11 @@ SESSION_ID = "session_001"
 # ---------------------------
 # CREATE AGENT (ONE TIME)
 # ---------------------------
-my_llm_agent = LlmAgent(
+my_llm_agent = Agent(
     name="SREIncidentBot",
-    model="gemini-2.0-flash",
     instruction=SYSTEM_PROMPT,
-    tools=tool_context
+    tools=loki_tools
 )
-
 # ---------------------------
 # CREATE SESSION SERVICE + RUNNER (ONE TIME)
 # ---------------------------
