@@ -34,13 +34,7 @@ my_llm_agent = LlmAgent(
     tools=loki_tools,
 
     model="gemini-2.0-flash",
-    instruction=SYSTEM_PROMPT + """
-IMPORTANT:
-You must ALWAYS return plain text only.
-Never output tool_code, JSON, metadata, or tool listings.
-Never describe available tools.
-Your job is to answer like a normal assistant in clean text.
-""",
+    instruction=SYSTEM_PROMPT,
 )
 session_service = InMemorySessionService()
 runner = Runner(agent=my_llm_agent, app_name=APP_NAME, session_service=session_service)
@@ -52,7 +46,7 @@ async def setup_session_and_runner():
     return session, runner
 
 async def call_agent_async(query):
-    logger.info("Query: ", query)
+    logger.info(f"Query: {query}")
     content = types.Content(role='user', parts=[types.Part(text=query)])
     session, runner = await setup_session_and_runner()
     events = runner.run_async(user_id=USER_ID, session_id=SESSION_ID, new_message=content)

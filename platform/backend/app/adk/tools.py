@@ -8,13 +8,54 @@ logger = logging.getLogger(__name__)
 loki_client = LokiClient(base_url="http://18.211.38.10:3100")
 import json
 
+
+def duration_to_minutes(value: str) -> float:
+    """
+    Convert a duration string like '24h', '2d', '30m', '45s' into minutes.
+    """
+    value = value.strip().lower()
+    
+    # Extract numeric part and unit
+    num = ""
+    unit = ""
+    
+    for ch in value:
+        if ch.isdigit() or ch == '.':
+            num += ch
+        else:
+            unit += ch
+
+    if not num or not unit:
+        raise ValueError("Invalid duration format")
+
+    num = float(num)
+
+    if unit == "d":
+        num= num * 24 * 60
+    elif unit == "h":
+        num= num * 60
+    elif unit == "m":
+        num= num
+    elif unit == "s":
+        num= num / 60
+    else:
+        raise ValueError(f"Unknown unit: {unit}")
+
+    return str(int(num))+'m'
+
+
 async def loki_fetch_logs(tool_context: ToolContext, time_range: str = "5m", **kwargs):
     """
     Fetch logs from Loki and store summary in ToolContext state.
     """
     try:
         logger.info(f"Fetching logs for last {time_range}")
+        time_range = duration_to_minutes(time_range)
+
         results = await loki_client.query_logs(time_range=time_range)
+        
+        logs = results.get("logs", [])  # <-- ensure logs returned
+
 
         # Extract summary
         summary = {
@@ -28,10 +69,13 @@ async def loki_fetch_logs(tool_context: ToolContext, time_range: str = "5m", **k
         # Save summary in state for next tool
         tool_context.state["temp:loki_summary"] = summary
         tool_context.state["temp:last_loki_query"] = time_range
-
+        logger.info(f"Summary: {summary}")
+        logger.info(f"Patterns: {logs}")
         return {
             "status": "ok",
-            "message": f"Fetched logs for last {time_range}"
+            "message": f"Fetched logs for last {time_range}",
+            "logs": logs[:200],
+            "summary": summary
         }
 
     except Exception as e:
@@ -44,19 +88,23 @@ async def loki_fetch_error_logs(tool_context: ToolContext, **_):
     try:
         logger.info("Fetching error logs")
         results = await loki_client.query_error_logs_only()
-
+        logs = results.get("logs", [])
         summary = {
             "total_errors": results.get("total_errors", 0),
-            "error_logs": len(results.get("error_logs", [])),
-            "critical_logs": len(results.get("critical_logs", []))
+            "error_logs": results.get("error_logs", []),
+            "critical_logs": results.get("critical_logs", [])
         }
+        logger.info(f"Error logs: {logs}")
+        logger.info(f"Error summary: {summary}")
 
         # Store in state
         tool_context.state["temp:loki_errors"] = summary
 
         return {
             "status": "ok",
-            "message": "Fetched error logs"
+            "message": "Fetched error logs",
+            "logs": logs[:200],
+            "summary": summary
         }
 
     except Exception as e:
@@ -77,49 +125,28 @@ async def loki_fetch_by_trace(tool_context: ToolContext, trace_id: str, **kwargs
 
         return {
             "status": "ok",
-            "message": f"Fetched logs for trace: {trace_id}"
-        }
+            "message": f"Fetched logs for trace: {trace_id}",
+            "logs": logs[:200]        }
 
     except Exception as e:
         return {"error": f"Loki trace fetch failed: {str(e)}"}
 
 
 loki_fetch_logs_tool = FunctionTool(
-    name="loki_fetch_logs",
-    description="Fetch Loki logs for a given time range. time_range='5m' by default.",
-    input_schema={
-        "type": "object",
-        "properties": {
-            "time_range": {"type": "string"}
-        },
-        "required": []
-    },
     func=loki_fetch_logs
 )
 
 loki_fetch_error_logs_tool = FunctionTool(
-    name="loki_fetch_error_logs",
-    description="Fetch only ERROR/CRITICAL logs from Loki.",
-    input_schema={"type": "object", "properties": {}},
     func=loki_fetch_error_logs
 )
 
 loki_fetch_by_trace_tool = FunctionTool(
-    name="loki_fetch_by_trace",
-    description="Fetch logs based on trace_id.",
-    input_schema={
-        "type": "object",
-        "properties": {
-            "trace_id": {"type": "string"}
-        },
-        "required": ["trace_id"]
-    },
     func=loki_fetch_by_trace
 )
 
 loki_tools = [
     loki_fetch_logs_tool,
-    loki_fetch_error_logs_tool,
-    loki_fetch_by_trace_tool
+    # loki_fetch_error_logs_tool,
+    # loki_fetch_by_trace_tool
 ]
 
