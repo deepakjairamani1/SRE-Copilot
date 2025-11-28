@@ -222,7 +222,7 @@ export default function Dashboard() {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <Badge variant={incident.severity as any} withDot>
-                            {SEVERITY_CONFIG[incident.severity].label}
+                            {SEVERITY_CONFIG[incident.severity as keyof typeof SEVERITY_CONFIG].label}
                           </Badge>
                           <span className="text-sm text-gray-600">{incident.incident_id}</span>
                         </div>
@@ -280,7 +280,7 @@ function MetricRow({ icon, label, value, status, details, critical }: MetricRowP
       </div>
       <div className="text-right">
         <p className="text-xl font-bold text-gray-900">{value}</p>
-        <Badge variant={status} className="mt-1">
+        <Badge variant={status}>
           {status.toUpperCase()}
         </Badge>
       </div>
