@@ -9,3 +9,4 @@ redis
 anthropic
 openai
 python-dotenv
+boto3

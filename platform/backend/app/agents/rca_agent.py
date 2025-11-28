@@ -32,11 +32,19 @@ class RCAAgent:
         self.llm_provider = os.getenv("LLM_PROVIDER", "claude").lower()
         self.llm_api_key = os.getenv("LLM_API_KEY", "")
         self.llm_model = os.getenv("LLM_MODEL", self._get_default_model())
+        
+        # For Bedrock, check AWS credentials instead of API key
+        if self.llm_provider == "bedrock":
+            self.aws_access_key = os.getenv("AWS_ACCESS_KEY_ID", "")
+            self.aws_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+            self.has_credentials = bool(self.aws_access_key and self.aws_secret_key)
+        else:
+            self.has_credentials = bool(self.llm_api_key and self.llm_api_key != "dummy")
     
     def _get_default_model(self) -> str:
         """Get default model for provider"""
         defaults = {
-            "bedrock": "anthropic.claude-sonnet-4-20250514-v1:0",
+            "bedrock": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
             "claude": "claude-sonnet-4-20250514",
             "gpt": "gpt-4o",
             "gemini": "gemini-2.0-flash-exp",
@@ -52,7 +60,10 @@ class RCAAgent:
         
         logger.info(f"[{incident_id}] Starting investigation for service: {incident_data.get('service')}")
         logger.info(f"[{incident_id}] LLM Provider: {self.llm_provider}, Model: {self.llm_model}")
-        logger.info(f"[{incident_id}] API Key configured: {bool(self.llm_api_key and self.llm_api_key != 'dummy')}")
+        if self.llm_provider == "bedrock":
+            logger.info(f"[{incident_id}] AWS Credentials configured: {self.has_credentials}")
+        else:
+            logger.info(f"[{incident_id}] API Key configured: {self.has_credentials}")
         
         try:
             # === STEP 1: PLAN ===
@@ -410,9 +421,13 @@ class RCAAgent:
         self._save_prompt(incident_id, prompt)
         
         try:
-            if not self.llm_api_key or self.llm_api_key == "dummy":
-                logger.warning("No LLM API key configured, using rule-based analysis")
-                await self._log_step("adapt", "No API key, using rule-based analysis")
+            if not self.has_credentials:
+                if self.llm_provider == "bedrock":
+                    logger.warning("No AWS credentials configured for Bedrock, using rule-based analysis")
+                    await self._log_step("adapt", "No AWS credentials, using rule-based analysis")
+                else:
+                    logger.warning("No LLM API key configured, using rule-based analysis")
+                    await self._log_step("adapt", "No API key, using rule-based analysis")
                 return await self._rule_based_rca(prometheus_data, loki_data, jaeger_data)
             
             # Call appropriate LLM provider
