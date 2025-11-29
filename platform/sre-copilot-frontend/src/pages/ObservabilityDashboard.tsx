@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Header } from '../components/layout/Header';
 import { Card } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
+
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { Activity, Database, FileText, GitBranch, Clock, AlertCircle } from 'lucide-react';
 import { API_BASE_URL } from '../config';
