@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-B998DA7D",
+  "title": "High HTTP Error Rate with Memory Pressure",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T18:09:42.435433",
+  "root_cause": "Memory exhaustion leading to service instability",
+  "fix_applied": "Restart affected worker processes",
+  "success": true,
+  "keywords": [
+    "memory-leak",
+    "oom-killer",
+    "http-errors",
+    "swap-thrashing",
+    "worker-process"
+  ],
+  "learning_reason": "Clear correlation between memory issues and service degradation, actionable fixes identified"
+}

@@ -82,6 +82,21 @@ services:
       - platform-network
     restart: unless-stopped
 
+  # Vector database for semantic search
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./data/chromadb:/data
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+    networks:
+      - platform-network
+    restart: unless-stopped
+
   # SRE Copilot Backend API
   backend:
     build: ./backend
@@ -101,6 +116,7 @@ services:
       - prometheus
       - loki
       - jaeger
+      - chromadb
     restart: unless-stopped
 
 # Persistent volumes for data retention

@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-D50CADDF",
+  "title": "100% HTTP Error Rate with High CPU Usage - core-athenamind Service Down",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T01:22:37.253783",
+  "root_cause": "CPU resource exhaustion causing application failure",
+  "fix_applied": "Restart core-athenamind service to clear CPU bottleneck",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-error-rate",
+    "service-outage",
+    "resource-limits",
+    "autoscaling",
+    "performance-degradation",
+    "kubernetes-restart"
+  ],
+  "learning_reason": "Clear correlation between CPU exhaustion and service failure with actionable remediation steps"
+}

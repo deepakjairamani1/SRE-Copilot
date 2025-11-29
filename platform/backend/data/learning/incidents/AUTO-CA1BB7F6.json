@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-CA1BB7F6",
+  "title": "High HTTP Error Rate and Latency Degradation in core-athenamind",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:21:31.727999",
+  "root_cause": "Performance degradation causing cascading failures with elevated CPU usage and timeout-related errors",
+  "fix_applied": "Check application logs for specific error patterns",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-spike",
+    "performance-degradation",
+    "cpu-pressure",
+    "timeout-errors",
+    "service-scaling",
+    "circuit-breaker"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics showing error rate and latency correlation, valuable for future incident response"
+}

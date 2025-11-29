@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-003B0529",
+  "title": "High HTTP Error Rate and Latency Degradation in core-athenamind",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:34:46.221386",
+  "root_cause": "Application-level performance degradation causing high latency and request failures",
+  "fix_applied": "Check application logs for specific error patterns",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-degradation",
+    "database-connection-pool",
+    "performance-issue",
+    "application-scaling",
+    "timeout-errors",
+    "service-degradation"
+  ],
+  "learning_reason": "Clear performance degradation pattern with multiple contributing factors, actionable remediation steps, and preventive measures"
+}

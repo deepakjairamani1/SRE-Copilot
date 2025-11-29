@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-A96CCBE7",
+  "title": "Database Connection Failure Causing 5.29% Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:08:48.259309",
+  "root_cause": "PostgreSQL database server is down or unreachable on localhost:5432",
+  "fix_applied": "Check PostgreSQL service status",
+  "success": true,
+  "keywords": [
+    "database-connection",
+    "postgresql",
+    "connection-refused",
+    "http-500",
+    "service-down",
+    "database-health",
+    "connection-pool"
+  ],
+  "learning_reason": "Clear database connectivity failure with actionable resolution steps and prevention measures"
+}

@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-2CE48E2B",
+  "title": "Critical HTTP Error Rate Spike - 50% Request Failures",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T01:56:56.937841",
+  "root_cause": "Application-level error handling failure causing 50% of requests to return client errors",
+  "fix_applied": "Check application logs for detailed error messages",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "client-error",
+    "cpu-spike",
+    "endpoint-failure",
+    "application-error",
+    "resource-pressure",
+    "api-degradation"
+  ],
+  "learning_reason": "High-impact incident with clear metrics showing 50% error rate spike, specific endpoint failure, and resource pressure - valuable for pattern recognition"
+}

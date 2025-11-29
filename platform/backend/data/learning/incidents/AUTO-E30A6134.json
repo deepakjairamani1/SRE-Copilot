@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-E30A6134",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:33:12.500235",
+  "root_cause": "Application-level performance bottleneck causing request timeouts and failures",
+  "fix_applied": "Check application thread pool and connection pool configuration",
+  "success": true,
+  "keywords": [
+    "http-latency",
+    "error-rate",
+    "connection-pool",
+    "performance-degradation",
+    "timeout",
+    "p99-latency",
+    "application-bottleneck"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics, useful for future HTTP latency incidents"
+}

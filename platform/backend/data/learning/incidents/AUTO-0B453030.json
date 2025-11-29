@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-0B453030",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:35:50.550724",
+  "root_cause": "Application-level performance bottleneck causing cascading latency and timeout failures",
+  "fix_applied": "Check application logs for database query timeouts",
+  "success": true,
+  "keywords": [
+    "http-latency",
+    "error-rate",
+    "database-connections",
+    "performance-degradation",
+    "timeout",
+    "connection-pool",
+    "p99-latency"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics showing correlation between latency and error rate, valuable for future database performance incidents"
+}

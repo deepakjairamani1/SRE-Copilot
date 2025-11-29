@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
+import { AgenticInvestigation } from '../components/features/AgenticInvestigation'
 import { useTriggerInvestigation } from '../hooks/useIncidents'
 import { 
   Play, 
@@ -19,6 +20,7 @@ import {
 export default function Investigate() {
   const [selectedService, setSelectedService] = useState('core-athenamind')
   const [customService, setCustomService] = useState('')
+  const [showAgenticFlow, setShowAgenticFlow] = useState(false)
   const navigate = useNavigate()
   
   const { mutate: triggerInvestigation, isPending, data, error } = useTriggerInvestigation()
@@ -39,6 +41,8 @@ export default function Investigate() {
       return
     }
 
+    // Start both agentic flow and actual investigation simultaneously
+    setShowAgenticFlow(true)
     toast.loading('Starting investigation...', { id: 'investigation' })
 
     triggerInvestigation(serviceToInvestigate, {
@@ -57,8 +61,14 @@ export default function Investigate() {
           id: 'investigation',
           description: error.message || 'An unexpected error occurred'
         })
+        setShowAgenticFlow(false)
       }
     })
+  }
+
+  const handleAgenticComplete = (result: any) => {
+    // Agentic flow completed - just for visual feedback
+    // Real investigation continues in parallel
   }
 
   return (
@@ -79,7 +89,16 @@ export default function Investigate() {
             </p>
           </div>
 
-          {!isPending && !data && (
+          {/* Agentic Investigation Flow - Runs in parallel with real investigation */}
+          <AgenticInvestigation 
+            isActive={showAgenticFlow && !data}
+            serviceName={selectedService === 'custom' ? customService : selectedService}
+            onComplete={handleAgenticComplete}
+            apiCompleted={!!data && !isPending}
+            apiData={data}
+          />
+
+          {!isPending && !data && !showAgenticFlow && (
             <Card className="mb-6">
               <h2 className="text-2xl font-bold text-text-primary mb-6">
                 Select Service to Investigate
@@ -185,30 +204,26 @@ export default function Investigate() {
                   <Loader2 className="w-10 h-10 text-primary animate-spin" />
                 </div>
                 <h2 className="text-2xl font-bold text-text-primary mb-3">
-                  Investigation in Progress...
+                  Finalizing Investigation...
                 </h2>
                 <p className="text-text-secondary mb-8">
-                  AI is analyzing {selectedService === 'custom' ? customService : selectedService}
+                  Generating comprehensive RCA report for {selectedService === 'custom' ? customService : selectedService}
                 </p>
 
                 <div className="max-w-md mx-auto space-y-4">
                   <ProgressStep
-                    icon="📋"
-                    label="Planning investigation strategy"
-                    active
-                  />
-                  <ProgressStep
-                    icon="🔍"
-                    label="Fetching observability data"
-                    active
-                  />
-                  <ProgressStep
-                    icon="✓"
-                    label="Validating data quality"
-                  />
-                  <ProgressStep
                     icon="🧠"
+                    label="Synthesizing agent findings"
+                    active
+                  />
+                  <ProgressStep
+                    icon="📊"
                     label="Generating RCA report"
+                    active
+                  />
+                  <ProgressStep
+                    icon="💾"
+                    label="Saving incident data"
                   />
                 </div>
               </div>
@@ -227,7 +242,7 @@ export default function Investigate() {
                 <p className="text-text-secondary mb-6">
                   Incident <code className="px-2 py-1 bg-primary/10 text-primary rounded font-mono text-sm">
                     {data.incident_id}
-                  </code> has been created
+                  </code> has been created with agentic analysis
                 </p>
 
                 <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8">

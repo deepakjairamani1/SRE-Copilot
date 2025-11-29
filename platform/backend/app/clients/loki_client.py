@@ -100,11 +100,15 @@ class LokiClient:
         
         return parsed
     
-    async def query_logs(self, time_range: str = "5m", limit: int = 1000) -> Dict[str, Any]:
+    async def query_logs(self, time_range: str = "5m", limit: int = 1000, start_time_iso: str = None) -> Dict[str, Any]:
         """Query logs from Loki with categorization"""
         try:
             end_time = datetime.now(timezone.utc)
-            start_time = end_time - timedelta(minutes=int(time_range.rstrip('m')))
+            
+            if start_time_iso:
+                start_time = datetime.fromisoformat(start_time_iso.replace('Z', '+00:00'))
+            else:
+                start_time = end_time - timedelta(minutes=int(time_range.rstrip('m')))
             
             query = '{exporter="OTLP"}'
             
@@ -187,11 +191,15 @@ class LokiClient:
             logger.error(f"Loki query failed: {e}")
             return {"error": "loki_unavailable", "logs": {}, "query_timestamp": datetime.now(timezone.utc).isoformat()}
     
-    async def query_error_logs_only(self) -> Dict[str, Any]:
+    async def query_error_logs_only(self, start_time_iso: str = None) -> Dict[str, Any]:
         """Quick query for ERROR and CRITICAL logs only"""
         try:
             end_time = datetime.now(timezone.utc)
-            start_time = end_time - timedelta(minutes=5)
+            
+            if start_time_iso:
+                start_time = datetime.fromisoformat(start_time_iso.replace('Z', '+00:00'))
+            else:
+                start_time = end_time - timedelta(minutes=5)
             
             query = '{exporter="OTLP"} |~ "ERROR|CRITICAL|FATAL"'
             

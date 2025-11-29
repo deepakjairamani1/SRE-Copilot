@@ -17,3 +17,5 @@ python-dotenv
 pydantic
 pydantic-settings
 
+boto3
+chromadb

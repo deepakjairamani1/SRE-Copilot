@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-CBB4097C",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:21:03.623364",
+  "root_cause": "HTTP service performance degradation causing cascading latency and error rate issues",
+  "fix_applied": "Check application logs for error patterns",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-spike",
+    "cpu-usage",
+    "performance-degradation",
+    "scaling",
+    "response-time",
+    "service-degradation"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics and remediation steps that can help with similar HTTP service issues"
+}

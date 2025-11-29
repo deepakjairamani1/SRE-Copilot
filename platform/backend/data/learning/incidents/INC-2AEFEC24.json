@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-2AEFEC24",
+  "title": "Critical HTTP Error Rate Spike with Database Connection Issues",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T02:01:36.457715",
+  "root_cause": "Database connection instability causing cascading HTTP failures",
+  "fix_applied": "Restart database connection pool",
+  "success": true,
+  "keywords": [
+    "database-connection",
+    "http-error-rate",
+    "connection-pool",
+    "cpu-pressure",
+    "service-degradation",
+    "template-rendering",
+    "circuit-breaker"
+  ],
+  "learning_reason": "Clear correlation between database errors and HTTP failures with actionable remediation steps"
+}

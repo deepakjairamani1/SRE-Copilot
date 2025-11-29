@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-7DB61E54",
+  "title": "CPU Saturation Causing HTTP Performance Degradation",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:40:13.039100",
+  "root_cause": "CPU resource exhaustion at 99.6% utilization causing request processing delays and timeouts",
+  "fix_applied": "Scale up CPU resources or add more instances",
+  "success": true,
+  "keywords": [
+    "cpu-saturation",
+    "http-error-rate",
+    "latency-degradation",
+    "resource-exhaustion",
+    "performance-incident",
+    "scaling",
+    "kubernetes"
+  ],
+  "learning_reason": "Clear correlation between CPU saturation and service degradation with actionable remediation steps"
+}

@@ -10,7 +10,9 @@ from typing import Dict, Any, List
 from app.clients.prometheus_client import PrometheusClient
 from app.clients.loki_client import LokiClient
 from app.clients.jaeger_client import JaegerClient
+from app.clients.dynamodb_client import DynamoDBClient
 from app.agents.bedrock_integration import call_bedrock
+from app.agents.vector_db_agent import VectorDBAgent
 
 logger = logging.getLogger(__name__)
 
@@ -25,18 +27,32 @@ class RCAAgent:
         self.prometheus_client = PrometheusClient(ctx.PROMETHEUS_URL)
         self.loki_client = LokiClient(ctx.LOKI_URL)
         self.jaeger_client = JaegerClient(ctx.JAEGER_QUERY_URL)
+        self.vector_db_agent = VectorDBAgent()
         self.timeout = 60
         self.steps = []
+        
+        # Initialize DynamoDB tracking
+        dynamodb_enabled = os.getenv("DYNAMODB_ENABLED", "false").lower() == "true"
+        dynamodb_region = os.getenv("DYNAMODB_REGION", "us-east-1")
+        self.dynamodb_client = DynamoDBClient(enabled=dynamodb_enabled, region=dynamodb_region)
         
         # LLM Configuration from env
         self.llm_provider = os.getenv("LLM_PROVIDER", "claude").lower()
         self.llm_api_key = os.getenv("LLM_API_KEY", "")
         self.llm_model = os.getenv("LLM_MODEL", self._get_default_model())
+        
+        # For Bedrock, check AWS credentials instead of API key
+        if self.llm_provider == "bedrock":
+            self.aws_access_key = os.getenv("AWS_ACCESS_KEY_ID", "")
+            self.aws_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+            self.has_credentials = bool(self.aws_access_key and self.aws_secret_key)
+        else:
+            self.has_credentials = bool(self.llm_api_key and self.llm_api_key != "dummy")
     
     def _get_default_model(self) -> str:
         """Get default model for provider"""
         defaults = {
-            "bedrock": "anthropic.claude-sonnet-4-20250514-v1:0",
+            "bedrock": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
             "claude": "claude-sonnet-4-20250514",
             "gpt": "gpt-4o",
             "gemini": "gemini-2.0-flash-exp",
@@ -52,7 +68,10 @@ class RCAAgent:
         
         logger.info(f"[{incident_id}] Starting investigation for service: {incident_data.get('service')}")
         logger.info(f"[{incident_id}] LLM Provider: {self.llm_provider}, Model: {self.llm_model}")
-        logger.info(f"[{incident_id}] API Key configured: {bool(self.llm_api_key and self.llm_api_key != 'dummy')}")
+        if self.llm_provider == "bedrock":
+            logger.info(f"[{incident_id}] AWS Credentials configured: {self.has_credentials}")
+        else:
+            logger.info(f"[{incident_id}] API Key configured: {self.has_credentials}")
         
         try:
             # === STEP 1: PLAN ===
@@ -64,12 +83,22 @@ class RCAAgent:
             # === STEP 2: ACT (Parallel data fetching) ===
             await self._log_step("act", "🔍 Fetching observability data...")
             
-            logger.info(f"[{incident_id}] Starting parallel data collection...")
+            # Get last investigation time from DynamoDB
+            service = incident_data.get('service', 'core-athenamind')
+            last_investigation_time = None
+            if self.dynamodb_client and self.dynamodb_client.enabled:
+                last_investigation_time = self.dynamodb_client.get_last_investigation_time(service)
+                if last_investigation_time:
+                    await self._log_step("act", f"  ℹ Last investigation: {last_investigation_time} (fetching only new data)")
+                else:
+                    await self._log_step("act", "  ℹ First investigation for this service (using 5m window)")
+            
+            logger.info(f"[{incident_id}] Starting parallel data collection (from: {last_investigation_time or '5m ago'})...")
             # Fetch observability data first
             prom_result, loki_result, jaeger_result = await asyncio.gather(
-                self._fetch_prometheus_data(incident_data),
-                self._fetch_loki_data(incident_data),
-                self._fetch_jaeger_data(incident_data),
+                self._fetch_prometheus_data(incident_data, last_investigation_time),
+                self._fetch_loki_data(incident_data, last_investigation_time),
+                self._fetch_jaeger_data(incident_data, last_investigation_time),
                 return_exceptions=True
             )
             
@@ -103,7 +132,7 @@ class RCAAgent:
                 
                 if validation.get("missing") == "prometheus":
                     await self._log_step("adapt", "Retrying Prometheus with wider time range...")
-                    prometheus_data = await self._fetch_prometheus_data(incident_data, time_range="15m")
+                    prometheus_data = await self._fetch_prometheus_data(incident_data, start_time=None, time_range="15m")
                 
                 if not self._validate_data(prometheus_data, loki_data, jaeger_data)["sufficient"]:
                     await self._log_step("adapt", "Using rule-based analysis as fallback")
@@ -155,8 +184,25 @@ class RCAAgent:
                 "generated_at": datetime.now(timezone.utc).isoformat()
             }
             
+            # Process semantics for learning using vector DB
+            logger.info(f"[{incident_id}] Starting semantic processing...")
+            semantic_result = await self._process_incident_semantics(
+                incident_id, incident_data, rca_report
+            )
+            logger.info(f"[{incident_id}] Semantic processing result: {semantic_result}")
+            
+            # Add semantic info to result
+            investigation_result["semantic_processing"] = semantic_result
+            
             # Save to database & JSON
             await self._save_incident_for_learning(incident_data, rca_report, investigation_result)
+            
+            # Update DynamoDB with current investigation time
+            current_time = datetime.now(timezone.utc).isoformat()
+            if self.dynamodb_client and self.dynamodb_client.enabled:
+                success = self.dynamodb_client.update_investigation_time(service, current_time, incident_id)
+                if success:
+                    await self._log_step("act", f"  ✓ Updated investigation tracker: {current_time}")
             
             return investigation_result
             
@@ -180,12 +226,24 @@ class RCAAgent:
             ]
         }
     
-    async def _fetch_prometheus_data(self, incident_data: Dict, time_range: str = "5m") -> Dict:
+    async def _fetch_prometheus_data(self, incident_data: Dict, start_time: str = None, time_range: str = "5m") -> Dict:
         """Fetch metrics with error handling"""
         try:
-            await self._log_step("act", f"  → Querying Prometheus (last {time_range})...")
-            logger.debug(f"Prometheus URL: {self.prometheus_client.base_url}")
-            data = await self.prometheus_client.get_critical_metrics()
+            time_desc = f"since {start_time}" if start_time else f"last {time_range}"
+            await self._log_step("act", f"  → Querying Prometheus ({time_desc})...")
+            logger.info(f"[PROMETHEUS] start_time={start_time}, time_range={time_range}")
+            
+            # Fetch with start_time if provided
+            if start_time:
+                logger.info(f"[PROMETHEUS] Using custom time range from {start_time}")
+                host_data, otlp_data = await asyncio.gather(
+                    self.prometheus_client.query_host_metrics(time_range, start_time),
+                    self.prometheus_client.query_otlp_metrics(time_range, start_time)
+                )
+                data = {**host_data, **otlp_data}
+            else:
+                logger.info("[PROMETHEUS] Using default get_critical_metrics()")
+                data = await self.prometheus_client.get_critical_metrics()
             
             if "error" in data:
                 logger.error(f"Prometheus returned error: {data['error']}")
@@ -203,12 +261,13 @@ class RCAAgent:
             await self._log_step("act", f"  ✗ Prometheus failed: {str(e)}")
             return {"error": str(e)}
     
-    async def _fetch_loki_data(self, incident_data: Dict) -> Dict:
+    async def _fetch_loki_data(self, incident_data: Dict, start_time: str = None) -> Dict:
         """Fetch logs with error handling"""
         try:
-            await self._log_step("act", "  → Querying Loki for error logs...")
+            time_desc = f"since {start_time}" if start_time else "last 5m"
+            await self._log_step("act", f"  → Querying Loki ({time_desc})...")
             logger.debug(f"Loki URL: {self.loki_client.base_url}")
-            data = await self.loki_client.query_logs(time_range="5m")
+            data = await self.loki_client.query_logs(time_range="5m", start_time_iso=start_time)
             
             if "error" in data:
                 logger.error(f"Loki returned error: {data['error']}")
@@ -230,12 +289,13 @@ class RCAAgent:
             await self._log_step("act", f"  ✗ Loki failed: {str(e)}")
             return {"error": str(e)}
     
-    async def _fetch_jaeger_data(self, incident_data: Dict) -> Dict:
+    async def _fetch_jaeger_data(self, incident_data: Dict, start_time: str = None) -> Dict:
         """Fetch traces with error handling"""
         try:
-            await self._log_step("act", "  → Querying Jaeger for traces...")
+            time_desc = f"since {start_time}" if start_time else "last 5m"
+            await self._log_step("act", f"  → Querying Jaeger ({time_desc})...")
             logger.debug(f"Jaeger URL: {self.jaeger_client.base_url}")
-            data = await self.jaeger_client.query_traces(time_range="5m")
+            data = await self.jaeger_client.query_traces(time_range="5m", start_time_iso=start_time)
             
             if "error" in data:
                 logger.error(f"Jaeger returned error: {data['error']}")
@@ -410,9 +470,13 @@ class RCAAgent:
         self._save_prompt(incident_id, prompt)
         
         try:
-            if not self.llm_api_key or self.llm_api_key == "dummy":
-                logger.warning("No LLM API key configured, using rule-based analysis")
-                await self._log_step("adapt", "No API key, using rule-based analysis")
+            if not self.has_credentials:
+                if self.llm_provider == "bedrock":
+                    logger.warning("No AWS credentials configured for Bedrock, using rule-based analysis")
+                    await self._log_step("adapt", "No AWS credentials, using rule-based analysis")
+                else:
+                    logger.warning("No LLM API key configured, using rule-based analysis")
+                    await self._log_step("adapt", "No API key, using rule-based analysis")
                 return await self._rule_based_rca(prometheus_data, loki_data, jaeger_data)
             
             # Call appropriate LLM provider
@@ -950,7 +1014,8 @@ Similarity Score: {inc['similarity_score']}/5
                     rca_report_json=full_rca_report,
                     investigation_steps=investigation_result.get("investigation_steps", []),
                     llm_provider=self.llm_provider,
-                    tokens_used=rca_report.get("_tokens_used", 0)
+                    tokens_used=rca_report.get("_tokens_used", 0),
+                    semantic_processing=investigation_result.get("semantic_processing", {})
                 )
                 db.add(db_incident)
                 logger.debug(f"[{incident_id}] Committing to database...")
@@ -1077,3 +1142,61 @@ Similarity Score: {inc['similarity_score']}/5
             },
             "_tokens_used": 0
         }
+    async def _process_incident_semantics(self, incident_id: str, incident_data: Dict, 
+                                         rca_report: Dict) -> Dict[str, Any]:
+        """Process incident semantics for learning and similarity"""
+        try:
+            await self._log_step("act", "🧠 Processing incident semantics...")
+            
+            # Build complete incident data for embedding
+            complete_incident = {
+                'service': incident_data.get('service'),
+                'severity': rca_report.get('executive_summary', {}).get('severity', 'unknown'),
+                'detected_at': incident_data.get('detected_at'),
+                'rca_report': rca_report
+            }
+            
+            # Process semantics using vector DB
+            semantic_result = await self.vector_db_agent.process_incident_semantics(
+                incident_id, complete_incident
+            )
+            
+            if semantic_result.get('error'):
+                await self._log_step("act", f"  ✗ Semantic processing failed: {semantic_result['error']}")
+                return semantic_result
+            
+            similar_count = len(semantic_result.get('similar_incidents', []))
+            await self._log_step("act", f"  ✓ Semantics processed, found {similar_count} similar incidents")
+            
+            return semantic_result
+            
+        except Exception as e:
+            logger.error(f"Semantic processing failed: {e}")
+            await self._log_step("act", f"  ✗ Semantic processing error: {str(e)}")
+            return {'error': str(e)}
+
+    def _summarize_for_embedding(self, prometheus_data: Dict, loki_data: Dict, 
+                                jaeger_data: Dict) -> str:
+        """Create summary text for embedding generation"""
+        components = []
+        
+        # Add critical metrics
+        for metric_type in ['host_metrics', 'otlp_metrics']:
+            metrics = prometheus_data.get(metric_type, {})
+            for name, data in metrics.items():
+                if data.get('status') in ['critical', 'warning']:
+                    components.append(f"{name}: {data.get('status')}")
+        
+        # Add error logs
+        logs = loki_data.get('logs', {})
+        error_count = len(logs.get('error_logs', []))
+        if error_count > 0:
+            components.append(f"error_logs: {error_count}")
+        
+        # Add slow traces
+        traces = jaeger_data.get('traces', {})
+        slow_count = len(traces.get('slow_traces', []))
+        if slow_count > 0:
+            components.append(f"slow_traces: {slow_count}")
+        
+        return ' | '.join(components) if components else 'normal_operation'

@@ -44,6 +44,9 @@ class Incident(Base):
     investigation_steps = Column(JSON)
     llm_provider = Column(String)
     tokens_used = Column(Integer)
+    
+    # Semantic processing
+    semantic_processing = Column(JSON)  # Similar incidents and embedding info
 
 
 class IncidentMetric(Base):

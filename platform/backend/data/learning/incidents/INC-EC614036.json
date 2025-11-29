@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-EC614036",
+  "title": "High HTTP Error Rate in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T18:31:45.836949",
+  "root_cause": "Elevated HTTP error rate without corresponding system resource issues",
+  "fix_applied": "Check application error logs",
+  "success": true,
+  "keywords": [
+    "http-errors",
+    "error-rate",
+    "application-validation",
+    "service-reliability",
+    "error-handling"
+  ],
+  "learning_reason": "Clear error pattern with normal system metrics indicates application-level issue requiring systematic fixes"
+}

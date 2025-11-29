@@ -40,7 +40,7 @@ export function IncidentTimeline({ timeline }: IncidentTimelineProps) {
                   <span className="text-sm font-semibold text-gray-900">
                     {formatDate(event.timestamp)}
                   </span>
-                  <Badge variant="ok" size="sm">
+                  <Badge variant="ok">
                     {event.source}
                   </Badge>
                 </div>

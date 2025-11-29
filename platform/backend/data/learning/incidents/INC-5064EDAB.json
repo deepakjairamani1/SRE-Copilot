@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-5064EDAB",
+  "title": "Critical HTTP Error Rate Spike - 50.91% Failure Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T02:00:20.718120",
+  "root_cause": "Application-level errors causing 50.91% HTTP request failures without generating error logs",
+  "fix_applied": "Check application logs at debug level",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "missing-logs",
+    "application-errors",
+    "cpu-pressure",
+    "observability-gap",
+    "silent-failures",
+    "error-monitoring"
+  ],
+  "learning_reason": "High error rate with missing observability data represents common production issue requiring systematic debugging approach"
+}

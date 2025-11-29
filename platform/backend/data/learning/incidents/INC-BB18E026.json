@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-BB18E026",
+  "title": "PostgreSQL Database Connection Failure Causing HTTP 500 Errors",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T01:32:15.305690",
+  "root_cause": "PostgreSQL database server is down or unreachable on localhost:5432",
+  "fix_applied": "Check PostgreSQL service status",
+  "success": true,
+  "keywords": [
+    "database-connection",
+    "postgresql",
+    "http-error",
+    "connection-refused",
+    "service-down",
+    "database-failure",
+    "psycopg2"
+  ],
+  "learning_reason": "Clear database connectivity failure with actionable resolution steps and prevention measures"
+}

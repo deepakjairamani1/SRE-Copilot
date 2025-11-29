@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-90289B18",
+  "title": "High HTTP Error Rate in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T19:19:24.224581",
+  "root_cause": "Elevated HTTP error rate while system resources appear healthy",
+  "fix_applied": "Restart application service",
+  "success": true,
+  "keywords": [
+    "http-errors",
+    "connection-tracking",
+    "error-logging",
+    "observability-gap",
+    "silent-failure"
+  ],
+  "learning_reason": "Common pattern of silent failures with missing observability that needs addressing"
+}

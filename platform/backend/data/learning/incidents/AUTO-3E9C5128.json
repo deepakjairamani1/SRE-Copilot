@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-3E9C5128",
+  "title": "CPU Saturation Causing HTTP Performance Degradation",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:46:13.808670",
+  "root_cause": "CPU resource exhaustion at 98.2% utilization causing request processing bottleneck",
+  "fix_applied": "Scale up CPU resources or add more instances",
+  "success": true,
+  "keywords": [
+    "cpu-saturation",
+    "http-error-rate",
+    "performance-degradation",
+    "resource-exhaustion",
+    "scaling",
+    "latency-spike",
+    "capacity-planning"
+  ],
+  "learning_reason": "Clear correlation between CPU saturation and service degradation with actionable remediation steps"
+}

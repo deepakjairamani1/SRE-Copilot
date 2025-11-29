@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-4F55BC8D",
+  "title": "HTTP Performance Degradation - High Error Rate and Latency Spike",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:36:20.843663",
+  "root_cause": "HTTP service performance degradation causing elevated error rates and response times",
+  "fix_applied": "Check application logs for error patterns",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-spike",
+    "performance-degradation",
+    "response-time",
+    "service-scaling",
+    "database-performance",
+    "timeout-handling"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics and systematic troubleshooting approach"
+}

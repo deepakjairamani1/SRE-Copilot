@@ -1,0 +1,18 @@
+{
+  "incident_id": "INC-FD1EC533",
+  "title": "Database Connection Failure Causing 100% Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T16:35:23.135043",
+  "root_cause": "PostgreSQL database connection failure - server not accepting connections on port 5432",
+  "fix_applied": "Restart PostgreSQL service",
+  "success": true,
+  "keywords": [
+    "database-connection",
+    "postgresql",
+    "connection-refused",
+    "http-500",
+    "service-availability",
+    "connection-pooling"
+  ],
+  "learning_reason": "Common failure pattern with clear symptoms and actionable remediation steps"
+}

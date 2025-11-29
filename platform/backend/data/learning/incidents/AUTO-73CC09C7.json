@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-73CC09C7",
+  "title": "High HTTP Error Rate and Latency Degradation in core-athenamind",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:10:58.388291",
+  "root_cause": "Performance degradation likely caused by resource contention or inefficient request processing leading to cascading latency and error rate increases",
+  "fix_applied": "Check application logs for error details",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-degradation",
+    "cpu-pressure",
+    "observability-gap",
+    "performance-bottleneck",
+    "tail-latency",
+    "resource-contention"
+  ],
+  "learning_reason": "Classic performance degradation incident with multiple observable symptoms but missing observability data - good learning case for monitoring gaps and escalation patterns"
+}

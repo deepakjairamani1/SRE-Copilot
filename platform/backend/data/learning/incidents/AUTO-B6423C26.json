@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-B6423C26",
+  "title": "High CPU utilization causing HTTP latency degradation and error rate spike",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:38:27.488219",
+  "root_cause": "CPU resource exhaustion at 92.5% utilization causing request processing delays and timeouts",
+  "fix_applied": "Scale up CPU resources or add instances",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-latency",
+    "error-rate",
+    "resource-scaling",
+    "performance-degradation",
+    "disk-io",
+    "horizontal-scaling"
+  ],
+  "learning_reason": "Clear correlation between CPU exhaustion and service degradation with actionable remediation steps and prevention strategies"
+}

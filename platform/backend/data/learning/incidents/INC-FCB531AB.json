@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-FCB531AB",
+  "title": "100% HTTP Error Rate in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-28T16:40:35.294340",
+  "root_cause": "Application-level error handling failure with healthy infrastructure",
+  "fix_applied": "Enable debug logging",
+  "success": true,
+  "keywords": [
+    "http-errors",
+    "logging-failure",
+    "error-handling",
+    "observability-gap",
+    "application-failure"
+  ],
+  "learning_reason": "Critical service failure pattern with clear metrics but missing observability data - highlights monitoring gaps"
+}

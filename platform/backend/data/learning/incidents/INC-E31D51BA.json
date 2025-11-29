@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-E31D51BA",
+  "title": "Critical HTTP Error Rate Spike - 50.91% of Requests Failing",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T02:00:42.043711",
+  "root_cause": "Application performance degradation causing high error rates under CPU pressure",
+  "fix_applied": "Scale up application instances",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "cpu-pressure",
+    "application-performance",
+    "resource-contention",
+    "scaling",
+    "monitoring",
+    "degradation"
+  ],
+  "learning_reason": "Clear correlation between CPU pressure and error rates, actionable remediation steps, and preventable through proper monitoring"
+}
