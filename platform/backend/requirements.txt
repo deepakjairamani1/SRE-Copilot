@@ -9,5 +9,13 @@ redis
 anthropic
 openai
 python-dotenv
+google-adk
+google-genai
+redis
+python-dotenv
+
+pydantic
+pydantic-settings
+
 boto3
 chromadb

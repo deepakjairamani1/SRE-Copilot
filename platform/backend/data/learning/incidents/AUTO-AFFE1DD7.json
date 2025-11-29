@@ -1,0 +1,17 @@
+{
+  "incident_id": "AUTO-AFFE1DD7",
+  "title": "High CPU Usage Causing HTTP Performance Degradation",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T05:25:34.595200",
+  "root_cause": "CPU resource exhaustion causing request processing delays and failures",
+  "fix_applied": "Scale up CPU resources or add instances",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-error-rate",
+    "latency-degradation",
+    "resource-scaling",
+    "performance-bottleneck"
+  ],
+  "learning_reason": "Clear correlation between CPU exhaustion and service degradation with actionable remediation steps"
+}

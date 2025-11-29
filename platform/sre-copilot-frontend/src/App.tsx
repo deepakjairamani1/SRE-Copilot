@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastProvider } from './components/ui/Toast'
 import { ErrorBoundary } from './components/features/ErrorBoundary'
+import { ChatBot } from './components/ui/ChatBot'
 import Dashboard from './pages/Dashboard'
 import IncidentsList from './pages/IncidentsList'
 import IncidentDetails from './pages/IncidentDetails'
@@ -37,6 +38,7 @@ function App() {
             <Route path="/api-test" element={<APITest />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <ChatBot />
         </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>

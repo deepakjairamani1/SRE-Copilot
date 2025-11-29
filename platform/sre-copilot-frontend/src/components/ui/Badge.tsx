@@ -4,6 +4,7 @@ interface BadgeProps {
   variant: 'critical' | 'high' | 'medium' | 'low' | 'ok' | 'warning'
   children: React.ReactNode
   withDot?: boolean
+  size?: string
   className?: string
 }
 
