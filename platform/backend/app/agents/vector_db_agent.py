@@ -51,9 +51,13 @@ class VectorDBAgent:
             except Exception as server_error:
                 logger.warning(f"ChromaDB server not available ({server_error}), using local client")
                 # Fallback to local persistent client
-                os.makedirs(db_path, exist_ok=True)
-                self.chroma_client = chromadb.PersistentClient(path=db_path)
-                logger.info(f"ChromaDB local client initialized at {db_path}")
+                if self.db_path:
+                    os.makedirs(self.db_path, exist_ok=True)
+                    self.chroma_client = chromadb.PersistentClient(path=self.db_path)
+                    logger.info(f"ChromaDB local client initialized at {self.db_path}")
+                else:
+                    logger.error("VECTOR_DB_PATH not configured, cannot use local ChromaDB")
+                    raise ValueError("VECTOR_DB_PATH not configured")
             
             self.collection = self.chroma_client.get_or_create_collection(
                 name="incident_embeddings",

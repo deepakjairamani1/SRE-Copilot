@@ -58,11 +58,15 @@ class JaegerClient:
             for s in sorted_spans[:5]
         ]
     
-    async def query_traces(self, time_range: str = "5m", limit: int = 100) -> Dict[str, Any]:
+    async def query_traces(self, time_range: str = "5m", limit: int = 100, start_time_iso: str = None) -> Dict[str, Any]:
         """Query traces from Jaeger"""
         try:
             end_time = datetime.now(timezone.utc)
-            start_time = end_time - timedelta(minutes=int(time_range.rstrip('m')))
+            
+            if start_time_iso:
+                start_time = datetime.fromisoformat(start_time_iso.replace('Z', '+00:00'))
+            else:
+                start_time = end_time - timedelta(minutes=int(time_range.rstrip('m')))
             
             async with httpx.AsyncClient(timeout=self.timeout) as client:
                 response = await client.get(

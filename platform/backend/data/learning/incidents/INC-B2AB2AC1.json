@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-B2AB2AC1",
+  "title": "Critical HTTP Error Rate Spike with High CPU Usage in core-athenamind",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T01:45:38.171325",
+  "root_cause": "CPU resource exhaustion causing HTTP request processing failures",
+  "fix_applied": "Scale up CPU resources or add instances",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-error-rate",
+    "database-n-plus-one",
+    "template-rendering",
+    "resource-scaling",
+    "performance-optimization",
+    "jinja2-optimization"
+  ],
+  "learning_reason": "Clear correlation between CPU exhaustion and HTTP errors with actionable optimization opportunities in database queries and template rendering"
+}

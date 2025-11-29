@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-17E95012",
+  "title": "100% HTTP Error Rate - All Requests Failing",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T01:25:02.700817",
+  "root_cause": "CPU resource exhaustion causing application to fail processing HTTP requests",
+  "fix_applied": "Restart application service to clear CPU-bound processes",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-error-rate",
+    "database-performance",
+    "template-rendering",
+    "resource-limits",
+    "autoscaling",
+    "connection-pooling"
+  ],
+  "learning_reason": "Clear correlation between CPU exhaustion and service failure with actionable remediation steps and prevention measures"
+}

@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-2E2AD484",
+  "title": "Critical HTTP Error Rate Spike - 62.96% Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T01:26:07.901836",
+  "root_cause": "Application layer failures causing systematic HTTP request rejections",
+  "fix_applied": "Check application health endpoint",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "observability-gap",
+    "application-restart",
+    "error-logging",
+    "cpu-pressure",
+    "monitoring-blind-spot",
+    "service-degradation"
+  ],
+  "learning_reason": "High error rate incident with insufficient logging demonstrates critical observability gap - valuable for improving monitoring practices"
+}

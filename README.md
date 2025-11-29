@@ -9,6 +9,7 @@ An observability platform for Site Reliability Engineering built for hackathon M
 - **Loki**: Log aggregation and storage
 - **Grafana**: Unified observability dashboard
 - **Redis**: Cache and session storage
+- **DynamoDB** (optional): Investigation tracking to prevent duplicate error analysis
 
 ## Quick Start
 
@@ -39,6 +40,28 @@ docker compose logs -f
 - **Jaeger OTLP gRPC**: `http://localhost:4317`
 - **Jaeger OTLP HTTP**: `http://localhost:4318`
 - **Loki Push**: `http://localhost:3100/loki/api/v1/push`
+
+## Features
+
+### DynamoDB Investigation Tracking (Optional)
+
+Prevents duplicate error analysis by tracking the last investigation timestamp per service. Each investigation only fetches data since the last run, eliminating overlapping time windows.
+
+**Quick Setup**:
+```bash
+# Add to platform/backend/.env
+DYNAMODB_ENABLED=true
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+```
+
+**Benefits**:
+- ✅ No duplicate errors in investigations
+- ✅ Reduced API costs (~$0.004/month)
+- ✅ Better accuracy with clear timelines
+- ✅ Graceful fallback if unavailable
+
+📚 See [DYNAMODB_QUICKSTART.md](platform/backend/DYNAMODB_QUICKSTART.md) for setup guide
 
 ## Development
 

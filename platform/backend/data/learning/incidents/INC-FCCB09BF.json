@@ -1,0 +1,18 @@
+{
+  "incident_id": "INC-FCCB09BF",
+  "title": "High HTTP Error Rate with Critical CPU Usage in core-athenamind",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T01:35:54.529271",
+  "root_cause": "CPU resource exhaustion causing HTTP request processing failures",
+  "fix_applied": "Scale up CPU resources or add more instances",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-error-rate",
+    "connection-handling",
+    "resource-scaling",
+    "performance-degradation",
+    "disk-io-bottleneck"
+  ],
+  "learning_reason": "Clear correlation between CPU exhaustion and HTTP errors with actionable remediation steps"
+}
