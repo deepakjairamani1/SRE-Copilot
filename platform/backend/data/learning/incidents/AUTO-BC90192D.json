@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-BC90192D",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:34:15.476804",
+  "root_cause": "HTTP service performance degradation causing elevated latency and error rates",
+  "fix_applied": "Check application logs for errors",
+  "success": true,
+  "keywords": [
+    "http-latency",
+    "error-rate",
+    "performance-degradation",
+    "response-time",
+    "service-degradation",
+    "application-bottleneck",
+    "timeout"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics, good example of application-level issues not reflected in infrastructure metrics"
+}

@@ -10,6 +10,7 @@ from typing import Dict, Any, List
 from app.clients.prometheus_client import PrometheusClient
 from app.clients.loki_client import LokiClient
 from app.clients.jaeger_client import JaegerClient
+from app.clients.dynamodb_client import DynamoDBClient
 from app.agents.bedrock_integration import call_bedrock
 from app.agents.vector_db_agent import VectorDBAgent
 
@@ -29,6 +30,11 @@ class RCAAgent:
         self.vector_db_agent = VectorDBAgent()
         self.timeout = 60
         self.steps = []
+        
+        # Initialize DynamoDB tracking
+        dynamodb_enabled = os.getenv("DYNAMODB_ENABLED", "false").lower() == "true"
+        dynamodb_region = os.getenv("DYNAMODB_REGION", "us-east-1")
+        self.dynamodb_client = DynamoDBClient(enabled=dynamodb_enabled, region=dynamodb_region)
         
         # LLM Configuration from env
         self.llm_provider = os.getenv("LLM_PROVIDER", "claude").lower()
@@ -77,12 +83,22 @@ class RCAAgent:
             # === STEP 2: ACT (Parallel data fetching) ===
             await self._log_step("act", "🔍 Fetching observability data...")
             
-            logger.info(f"[{incident_id}] Starting parallel data collection...")
+            # Get last investigation time from DynamoDB
+            service = incident_data.get('service', 'core-athenamind')
+            last_investigation_time = None
+            if self.dynamodb_client and self.dynamodb_client.enabled:
+                last_investigation_time = self.dynamodb_client.get_last_investigation_time(service)
+                if last_investigation_time:
+                    await self._log_step("act", f"  ℹ Last investigation: {last_investigation_time} (fetching only new data)")
+                else:
+                    await self._log_step("act", "  ℹ First investigation for this service (using 5m window)")
+            
+            logger.info(f"[{incident_id}] Starting parallel data collection (from: {last_investigation_time or '5m ago'})...")
             # Fetch observability data first
             prom_result, loki_result, jaeger_result = await asyncio.gather(
-                self._fetch_prometheus_data(incident_data),
-                self._fetch_loki_data(incident_data),
-                self._fetch_jaeger_data(incident_data),
+                self._fetch_prometheus_data(incident_data, last_investigation_time),
+                self._fetch_loki_data(incident_data, last_investigation_time),
+                self._fetch_jaeger_data(incident_data, last_investigation_time),
                 return_exceptions=True
             )
             
@@ -116,7 +132,7 @@ class RCAAgent:
                 
                 if validation.get("missing") == "prometheus":
                     await self._log_step("adapt", "Retrying Prometheus with wider time range...")
-                    prometheus_data = await self._fetch_prometheus_data(incident_data, time_range="15m")
+                    prometheus_data = await self._fetch_prometheus_data(incident_data, start_time=None, time_range="15m")
                 
                 if not self._validate_data(prometheus_data, loki_data, jaeger_data)["sufficient"]:
                     await self._log_step("adapt", "Using rule-based analysis as fallback")
@@ -181,6 +197,13 @@ class RCAAgent:
             # Save to database & JSON
             await self._save_incident_for_learning(incident_data, rca_report, investigation_result)
             
+            # Update DynamoDB with current investigation time
+            current_time = datetime.now(timezone.utc).isoformat()
+            if self.dynamodb_client and self.dynamodb_client.enabled:
+                success = self.dynamodb_client.update_investigation_time(service, current_time, incident_id)
+                if success:
+                    await self._log_step("act", f"  ✓ Updated investigation tracker: {current_time}")
+            
             return investigation_result
             
         except Exception as e:
@@ -203,12 +226,24 @@ class RCAAgent:
             ]
         }
     
-    async def _fetch_prometheus_data(self, incident_data: Dict, time_range: str = "5m") -> Dict:
+    async def _fetch_prometheus_data(self, incident_data: Dict, start_time: str = None, time_range: str = "5m") -> Dict:
         """Fetch metrics with error handling"""
         try:
-            await self._log_step("act", f"  → Querying Prometheus (last {time_range})...")
-            logger.debug(f"Prometheus URL: {self.prometheus_client.base_url}")
-            data = await self.prometheus_client.get_critical_metrics()
+            time_desc = f"since {start_time}" if start_time else f"last {time_range}"
+            await self._log_step("act", f"  → Querying Prometheus ({time_desc})...")
+            logger.info(f"[PROMETHEUS] start_time={start_time}, time_range={time_range}")
+            
+            # Fetch with start_time if provided
+            if start_time:
+                logger.info(f"[PROMETHEUS] Using custom time range from {start_time}")
+                host_data, otlp_data = await asyncio.gather(
+                    self.prometheus_client.query_host_metrics(time_range, start_time),
+                    self.prometheus_client.query_otlp_metrics(time_range, start_time)
+                )
+                data = {**host_data, **otlp_data}
+            else:
+                logger.info("[PROMETHEUS] Using default get_critical_metrics()")
+                data = await self.prometheus_client.get_critical_metrics()
             
             if "error" in data:
                 logger.error(f"Prometheus returned error: {data['error']}")
@@ -226,12 +261,13 @@ class RCAAgent:
             await self._log_step("act", f"  ✗ Prometheus failed: {str(e)}")
             return {"error": str(e)}
     
-    async def _fetch_loki_data(self, incident_data: Dict) -> Dict:
+    async def _fetch_loki_data(self, incident_data: Dict, start_time: str = None) -> Dict:
         """Fetch logs with error handling"""
         try:
-            await self._log_step("act", "  → Querying Loki for error logs...")
+            time_desc = f"since {start_time}" if start_time else "last 5m"
+            await self._log_step("act", f"  → Querying Loki ({time_desc})...")
             logger.debug(f"Loki URL: {self.loki_client.base_url}")
-            data = await self.loki_client.query_logs(time_range="5m")
+            data = await self.loki_client.query_logs(time_range="5m", start_time_iso=start_time)
             
             if "error" in data:
                 logger.error(f"Loki returned error: {data['error']}")
@@ -253,12 +289,13 @@ class RCAAgent:
             await self._log_step("act", f"  ✗ Loki failed: {str(e)}")
             return {"error": str(e)}
     
-    async def _fetch_jaeger_data(self, incident_data: Dict) -> Dict:
+    async def _fetch_jaeger_data(self, incident_data: Dict, start_time: str = None) -> Dict:
         """Fetch traces with error handling"""
         try:
-            await self._log_step("act", "  → Querying Jaeger for traces...")
+            time_desc = f"since {start_time}" if start_time else "last 5m"
+            await self._log_step("act", f"  → Querying Jaeger ({time_desc})...")
             logger.debug(f"Jaeger URL: {self.jaeger_client.base_url}")
-            data = await self.jaeger_client.query_traces(time_range="5m")
+            data = await self.jaeger_client.query_traces(time_range="5m", start_time_iso=start_time)
             
             if "error" in data:
                 logger.error(f"Jaeger returned error: {data['error']}")

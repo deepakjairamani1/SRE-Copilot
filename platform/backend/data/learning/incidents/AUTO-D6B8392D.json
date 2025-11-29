@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-D6B8392D",
+  "title": "High CPU Usage Causing HTTP Performance Degradation",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:41:21.532224",
+  "root_cause": "CPU saturation at 91.5% causing request processing delays and timeouts",
+  "fix_applied": "Scale up CPU resources or add instances",
+  "success": true,
+  "keywords": [
+    "cpu-saturation",
+    "http-latency",
+    "error-rate",
+    "performance-degradation",
+    "resource-scaling",
+    "request-processing",
+    "load-balancing"
+  ],
+  "learning_reason": "Clear correlation between CPU saturation and service degradation with actionable remediation steps"
+}

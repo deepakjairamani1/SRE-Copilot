@@ -1,5 +1,6 @@
 import { Card } from '../ui/Card'
 import { Badge } from '../ui/Badge'
+import { useNavigate } from 'react-router-dom'
 import { 
   Brain, 
   TrendingUp, 
@@ -108,6 +109,7 @@ export function SimilarIncidents({ similarIncidents = [], isLoading = false }: S
 }
 
 function SimilarIncidentCard({ incident, rank }: { incident: SimilarIncident; rank: number }) {
+  const navigate = useNavigate()
   const similarity = Math.round(incident.similarity_score * 100)
   const metadata = incident.metadata
 
@@ -206,7 +208,13 @@ function SimilarIncidentCard({ incident, rank }: { incident: SimilarIncident; ra
           )}
         </div>
         
-        <div className="flex items-center gap-1 text-purple-600 hover:text-purple-700 cursor-pointer">
+        <div 
+          onClick={() => {
+            navigate(`/incidents/${incident.incident_id}`)
+            window.scrollTo(0, 0)
+          }}
+          className="flex items-center gap-1 text-purple-600 hover:text-purple-700 cursor-pointer"
+        >
           <span className="text-xs font-medium">View Details</span>
           <ArrowRight className="w-3 h-3" />
         </div>

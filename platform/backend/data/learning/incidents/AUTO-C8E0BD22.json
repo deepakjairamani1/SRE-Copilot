@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-C8E0BD22",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:22:04.307893",
+  "root_cause": "Application performance degradation causing cascading latency and error rate increases",
+  "fix_applied": "Check application logs for errors",
+  "success": true,
+  "keywords": [
+    "http-latency",
+    "error-rate",
+    "cpu-pressure",
+    "performance-degradation",
+    "observability-gap",
+    "scaling",
+    "database-connections"
+  ],
+  "learning_reason": "Classic performance degradation pattern with multiple contributing factors, demonstrates importance of comprehensive observability"
+}

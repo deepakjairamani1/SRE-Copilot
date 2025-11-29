@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-695B83CB",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:12:13.523914",
+  "root_cause": "HTTP service performance degradation causing elevated error rates and latency spikes",
+  "fix_applied": "Check application logs for error patterns",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-spike",
+    "cpu-contention",
+    "performance-degradation",
+    "service-scaling",
+    "database-bottleneck",
+    "response-time"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics and multiple remediation strategies"
+}

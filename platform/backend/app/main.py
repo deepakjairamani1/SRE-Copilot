@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .context import get_context
 from .routers import incidents, analytics, rca, observability, vector_db
+import os
 
 # Create logs directory
 Path('logs').mkdir(exist_ok=True)
@@ -56,6 +57,33 @@ async def startup_event():
     
     logger.info("Logging configured: INFO level to stdout and logs/sre_copilot.log")
     logger.info("Debug logging enabled for RCA agent and clients")
+    
+    # Auto-start investigation if enabled
+    auto_inv_enabled = os.getenv("AUTO_INVESTIGATION_ENABLED", "false").lower()
+    logger.info(f"AUTO_INVESTIGATION_ENABLED={auto_inv_enabled}")
+    
+    if auto_inv_enabled == "true":
+        from app.services.auto_investigator import AutoInvestigator
+        from app.routers import auto_investigation
+        import asyncio
+        
+        slack_webhook = os.getenv("SLACK_WEBHOOK_URL", "")
+        check_interval = int(os.getenv("AUTO_INVESTIGATION_CHECK_INTERVAL", "10"))
+        cpu_threshold = float(os.getenv("AUTO_INVESTIGATION_CPU_THRESHOLD", "90.0"))
+        ram_threshold = float(os.getenv("AUTO_INVESTIGATION_RAM_THRESHOLD", "90.0"))
+        consecutive_errors = int(os.getenv("AUTO_INVESTIGATION_CONSECUTIVE_ERRORS", "3"))
+        
+        auto_inv = AutoInvestigator(slack_webhook_url=slack_webhook)
+        auto_inv.check_interval = check_interval
+        auto_inv.monitor.cpu_threshold = cpu_threshold
+        auto_inv.monitor.ram_threshold = ram_threshold
+        auto_inv.monitor.consecutive_errors_threshold = consecutive_errors
+        
+        # Store globally so API can access it
+        auto_investigation.auto_investigator = auto_inv
+        
+        asyncio.create_task(auto_inv.start_monitoring())
+        logger.info(f"✅ Auto-investigation started (interval: {check_interval}s, CPU: {cpu_threshold}%, RAM: {ram_threshold}%, Slack: {bool(slack_webhook)})")
 
 
 # Health check endpoint
@@ -77,8 +105,10 @@ async def debug_config():
 
 
 # Include routers
+from .routers import auto_investigation
 app.include_router(incidents.router)
 app.include_router(analytics.router)
 app.include_router(rca.router)
 app.include_router(observability.router)
 app.include_router(vector_db.router)
+app.include_router(auto_investigation.router)

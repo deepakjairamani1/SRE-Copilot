@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-C22EFDFB",
+  "title": "HTTP Performance Degradation - High Error Rate and Latency",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:36:48.875728",
+  "root_cause": "Application performance bottleneck causing high latency and request failures",
+  "fix_applied": "Check application logs for errors",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-degradation",
+    "performance-bottleneck",
+    "database-connections",
+    "response-time",
+    "service-degradation",
+    "application-scaling"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics and multiple remediation strategies applicable to similar HTTP service issues"
+}

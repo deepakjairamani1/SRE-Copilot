@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-9A50AC5B",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:33:44.330091",
+  "root_cause": "Application-layer performance bottleneck causing cascading latency and error rate issues",
+  "fix_applied": "Check application logs for errors and exceptions",
+  "success": true,
+  "keywords": [
+    "http-latency",
+    "error-rate",
+    "performance-degradation",
+    "tail-latency",
+    "application-bottleneck",
+    "observability-gap",
+    "timeout"
+  ],
+  "learning_reason": "Classic performance degradation pattern with clear metrics showing latency and error rate correlation, valuable for training incident response"
+}

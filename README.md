@@ -9,6 +9,7 @@ An observability platform for Site Reliability Engineering built for hackathon M
 - **Loki**: Log aggregation and storage
 - **Grafana**: Unified observability dashboard
 - **Redis**: Cache and session storage
+- **DynamoDB** (optional): Investigation tracking to prevent duplicate error analysis
 
 ## Quick Start
 
@@ -39,6 +40,45 @@ docker compose logs -f
 - **Jaeger OTLP gRPC**: `http://localhost:4317`
 - **Jaeger OTLP HTTP**: `http://localhost:4318`
 - **Loki Push**: `http://localhost:3100/loki/api/v1/push`
+
+## Features
+
+### Auto-Investigation (NEW)
+
+Automatically triggers RCA investigations when:
+- CPU/RAM utilization > 90%
+- 3+ consecutive error log batches detected
+
+Sends Slack alerts only for high-severity issues (confidence score > 0.6) to prevent false alerts.
+
+**Quick Start:**
+```bash
+curl -X POST http://localhost:8000/api/auto-investigation/start \
+  -H "Content-Type: application/json" \
+  -d '{"enabled": true, "slack_webhook_url": "YOUR_WEBHOOK_URL"}'
+```
+
+📚 See [QUICKSTART_AUTO_INVESTIGATION.md](QUICKSTART_AUTO_INVESTIGATION.md) for setup guide
+
+### DynamoDB Investigation Tracking (Optional)
+
+Prevents duplicate error analysis by tracking the last investigation timestamp per service. Each investigation only fetches data since the last run, eliminating overlapping time windows.
+
+**Quick Setup**:
+```bash
+# Add to platform/backend/.env
+DYNAMODB_ENABLED=true
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+```
+
+**Benefits**:
+- ✅ No duplicate errors in investigations
+- ✅ Reduced API costs (~$0.004/month)
+- ✅ Better accuracy with clear timelines
+- ✅ Graceful fallback if unavailable
+
+📚 See [DYNAMODB_QUICKSTART.md](platform/backend/DYNAMODB_QUICKSTART.md) for setup guide
 
 ## Development
 

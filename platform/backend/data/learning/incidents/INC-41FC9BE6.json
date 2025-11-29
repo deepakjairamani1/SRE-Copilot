@@ -1,0 +1,19 @@
+{
+  "incident_id": "INC-41FC9BE6",
+  "title": "Critical HTTP Error Rate Spike - 51% of Requests Failing",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T01:43:38.498276",
+  "root_cause": "High rate of client errors (4xx) affecting POST /api/rca/investigate endpoint",
+  "fix_applied": "Check application logs for detailed error messages",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "client-error",
+    "api-endpoint",
+    "cpu-spike",
+    "request-validation",
+    "error-handling",
+    "rca-endpoint"
+  ],
+  "learning_reason": "Clear pattern of endpoint-specific client errors with actionable remediation steps and prevention measures"
+}
