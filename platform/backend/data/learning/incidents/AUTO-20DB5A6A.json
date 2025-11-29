@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-20DB5A6A",
+  "title": "High CPU utilization causing HTTP performance degradation",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:47:21.720586",
+  "root_cause": "CPU resource exhaustion causing HTTP request processing degradation",
+  "fix_applied": "Scale up CPU resources or add instances",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-latency",
+    "error-rate",
+    "performance-degradation",
+    "resource-scaling",
+    "monitoring-gaps",
+    "sre-response"
+  ],
+  "learning_reason": "Clear correlation between CPU exhaustion and HTTP performance degradation with actionable remediation steps"
+}

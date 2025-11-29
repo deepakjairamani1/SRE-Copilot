@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-5D3489C8",
+  "title": "Critical CPU Saturation Causing HTTP Performance Degradation",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:40:49.542389",
+  "root_cause": "CPU resource exhaustion at 98% utilization causing request processing bottleneck",
+  "fix_applied": "Scale up CPU resources or add replicas",
+  "success": true,
+  "keywords": [
+    "cpu-saturation",
+    "http-error-rate",
+    "latency-degradation",
+    "resource-exhaustion",
+    "performance-bottleneck",
+    "scaling",
+    "kubernetes"
+  ],
+  "learning_reason": "Clear correlation between CPU saturation and service degradation with actionable remediation steps"
+}

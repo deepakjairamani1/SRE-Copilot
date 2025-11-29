@@ -12,14 +12,14 @@ class SlackNotifier:
         self.webhook_url = webhook_url
         self.enabled = bool(webhook_url and webhook_url != "")
     
-    async def send_rca(self, incident_id: str, rca_report: Dict[str, Any], severity_score: float) -> bool:
+    async def send_rca(self, incident_id: str, rca_report: Dict[str, Any], severity_score: float, frontend_url: str = "http://localhost:3001") -> bool:
         """Send RCA to Slack if severity > 0.6"""
         if not self.enabled:
             logger.warning("Slack webhook not configured, skipping notification")
             return False
         
-        if severity_score <= 0.6:
-            logger.info(f"Severity {severity_score} <= 0.6, skipping Slack notification (false alert)")
+        if severity_score <= 0.8:
+            logger.info(f"Severity {severity_score} <= 0.8, skipping Slack notification (false alert)")
             return False
         
         try:
@@ -62,9 +62,28 @@ class SlackNotifier:
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"*Immediate Actions:*\n{action_text}"
+                        "text": f"*Solution (Immediate Actions):*\n{action_text}"
                     }
                 })
+            
+            permanent_fixes = remediation.get('permanent_fixes', [])
+            if permanent_fixes:
+                fix_text = "\n".join([f"• {f.get('fix', 'N/A')}" for f in permanent_fixes[:2]])
+                blocks.append({
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"*Permanent Fixes:*\n{fix_text}"
+                    }
+                })
+            
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"<{frontend_url}/incidents/{incident_id}|🔗 View Full RCA Report>"
+                }
+            })
             
             payload = {
                 "text": f"Incident {incident_id}: {summary.get('title', 'Unknown')}",

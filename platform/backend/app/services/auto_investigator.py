@@ -96,9 +96,11 @@ class AutoInvestigator:
         
         logger.info(f"[{incident_id}] Investigation complete. Severity: {severity_score}")
         
-        if severity_score > 0.6:
-            logger.info(f"[{incident_id}] Severity {severity_score} > 0.6, sending to Slack")
-            await self.slack_notifier.send_rca(incident_id, rca_report, severity_score)
+        if severity_score > 0.8:
+            logger.info(f"[{incident_id}] Severity {severity_score} > 0.8, sending to Slack")
+            import os
+            frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3001")
+            await self.slack_notifier.send_rca(incident_id, rca_report, severity_score, frontend_url)
         else:
             logger.info(f"[{incident_id}] Severity {severity_score} <= 0.6, ignoring as false alert")
     

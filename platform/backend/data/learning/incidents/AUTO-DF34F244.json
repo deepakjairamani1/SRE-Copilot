@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-DF34F244",
+  "title": "HTTP Performance Degradation - High Error Rate and Latency",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:32:43.865420",
+  "root_cause": "HTTP service performance degradation causing elevated error rates and response times",
+  "fix_applied": "Check application logs for error patterns",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-spike",
+    "performance-degradation",
+    "response-time",
+    "connection-pool",
+    "service-degradation",
+    "slo-breach"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics, good example of HTTP service monitoring"
+}

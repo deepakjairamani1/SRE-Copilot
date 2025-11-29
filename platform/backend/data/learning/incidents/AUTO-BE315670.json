@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-BE315670",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:35:22.163166",
+  "root_cause": "Application-level performance bottleneck causing request timeouts and failures",
+  "fix_applied": "Check application logs for errors",
+  "success": true,
+  "keywords": [
+    "http-latency",
+    "error-rate",
+    "performance-degradation",
+    "application-bottleneck",
+    "request-timeout",
+    "tail-latency",
+    "sre-response"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics and systematic troubleshooting approach"
+}

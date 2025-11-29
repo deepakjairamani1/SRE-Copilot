@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-2C9C7904",
+  "title": "High CPU and HTTP Performance Degradation in core-athenamind",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:44:22.212585",
+  "root_cause": "CPU resource exhaustion causing request processing bottleneck",
+  "fix_applied": "Scale up CPU resources or add instances",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-latency",
+    "error-rate",
+    "performance-degradation",
+    "resource-scaling",
+    "request-throttling",
+    "service-bottleneck"
+  ],
+  "learning_reason": "Clear correlation between CPU exhaustion and service degradation with actionable remediation steps and prevention strategies"
+}

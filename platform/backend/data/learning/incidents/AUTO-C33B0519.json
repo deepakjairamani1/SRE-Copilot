@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-C33B0519",
+  "title": "High CPU and HTTP Performance Degradation in core-athenamind",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:37:57.820893",
+  "root_cause": "CPU resource exhaustion causing request processing bottleneck",
+  "fix_applied": "Scale up CPU resources or add replicas",
+  "success": true,
+  "keywords": [
+    "cpu-exhaustion",
+    "http-latency",
+    "error-rate",
+    "performance-degradation",
+    "resource-scaling",
+    "response-time",
+    "bottleneck"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics, useful for future CPU/latency correlation incidents"
+}
