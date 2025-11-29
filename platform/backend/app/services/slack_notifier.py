@@ -13,28 +13,35 @@ class SlackNotifier:
         self.enabled = bool(webhook_url and webhook_url != "")
     
     async def send_rca(self, incident_id: str, rca_report: Dict[str, Any], severity_score: float, frontend_url: str = "http://localhost:3001") -> bool:
-        """Send RCA to Slack if severity > 0.6"""
+        """Send RCA to Slack based on severity"""
         if not self.enabled:
             logger.warning("Slack webhook not configured, skipping notification")
             return False
         
-        if severity_score <= 0.8:
-            logger.info(f"Severity {severity_score} <= 0.8, skipping Slack notification (false alert)")
+        if severity_score < 0.5:
+            logger.info(f"Severity {severity_score} < 0.5, skipping Slack notification (too low)")
             return False
+        
+        is_potential_false_alert = 0.5 <= severity_score <= 0.8
         
         try:
             summary = rca_report.get('executive_summary', {})
             root_cause = rca_report.get('root_cause', {})
             remediation = rca_report.get('remediation', {})
             
-            severity_emoji = "🔴" if severity_score > 0.8 else "🟠"
+            if is_potential_false_alert:
+                severity_emoji = "⚠️"
+                alert_type = "POTENTIAL FALSE ALERT"
+            else:
+                severity_emoji = "🔴" if severity_score > 0.9 else "🟠"
+                alert_type = "CRITICAL INCIDENT"
             
             blocks = [
                 {
                     "type": "header",
                     "text": {
                         "type": "plain_text",
-                        "text": f"{severity_emoji} Incident Alert: {summary.get('title', 'Unknown')}"
+                        "text": f"{severity_emoji} {alert_type}: {summary.get('title', 'Unknown')}"
                     }
                 },
                 {
@@ -77,12 +84,37 @@ class SlackNotifier:
                     }
                 })
             
+            if is_potential_false_alert:
+                blocks.append({
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "⚠️ *This may be a false alert* (severity 0.5-0.8). Review and dismiss if not critical."
+                    }
+                })
+            
             blocks.append({
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"<{frontend_url}/incidents/{incident_id}|🔗 View Full RCA Report>"
-                }
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "🔗 View Full RCA"
+                        },
+                        "url": f"{frontend_url}/incidents/{incident_id}",
+                        "style": "primary"
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "✅ Dismiss (False Alert)"
+                        },
+                        "url": f"{frontend_url}/incidents/{incident_id}?action=dismiss",
+                        "style": "danger" if is_potential_false_alert else None
+                    }
+                ]
             })
             
             payload = {

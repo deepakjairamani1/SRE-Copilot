@@ -96,13 +96,18 @@ class AutoInvestigator:
         
         logger.info(f"[{incident_id}] Investigation complete. Severity: {severity_score}")
         
-        if severity_score > 0.8:
-            logger.info(f"[{incident_id}] Severity {severity_score} > 0.8, sending to Slack")
+        if severity_score > 0.5:
             import os
             frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3001")
+            
+            if 0.5 < severity_score <= 0.8:
+                logger.info(f"[{incident_id}] Severity {severity_score} (0.5-0.8), sending as potential false alert")
+            else:
+                logger.info(f"[{incident_id}] Severity {severity_score} > 0.8, sending as critical alert")
+            
             await self.slack_notifier.send_rca(incident_id, rca_report, severity_score, frontend_url)
         else:
-            logger.info(f"[{incident_id}] Severity {severity_score} <= 0.6, ignoring as false alert")
+            logger.info(f"[{incident_id}] Severity {severity_score} <= 0.5, ignoring (too low)")
     
     def _format_trigger_reason(self, trigger_status: Dict[str, Any]) -> str:
         """Format trigger reason for incident data"""
