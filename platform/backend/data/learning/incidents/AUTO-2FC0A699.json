@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-2FC0A699",
+  "title": "HTTP Latency Degradation in core-athenamind Service",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T02:51:10.586664",
+  "root_cause": "Performance bottleneck causing HTTP request processing delays",
+  "fix_applied": "Check application logs for errors",
+  "success": true,
+  "keywords": [
+    "http-latency",
+    "cpu-usage",
+    "performance-degradation",
+    "response-time",
+    "error-rate",
+    "scaling",
+    "bottleneck"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics and systematic troubleshooting approach"
+}

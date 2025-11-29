@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-CDC23EC0",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:09:52.870902",
+  "root_cause": "HTTP service performance degradation causing cascading latency and error rate issues",
+  "fix_applied": "Check application logs for errors",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-spike",
+    "cpu-bottleneck",
+    "performance-degradation",
+    "scaling",
+    "timeout",
+    "web-service"
+  ],
+  "learning_reason": "Clear performance degradation pattern with multiple correlated metrics, actionable remediation steps, and common web service issue"
+}

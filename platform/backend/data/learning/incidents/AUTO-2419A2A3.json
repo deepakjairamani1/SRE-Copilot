@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-2419A2A3",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:14:34.647422",
+  "root_cause": "HTTP service performance degradation causing elevated error rates and latency spikes",
+  "fix_applied": "Check application logs for errors",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-degradation",
+    "disk-io-bottleneck",
+    "performance-monitoring",
+    "observability-gap",
+    "service-degradation",
+    "error-rate-spike"
+  ],
+  "learning_reason": "Clear performance degradation pattern with multiple contributing factors, actionable remediation steps, and highlights observability gaps"
+}

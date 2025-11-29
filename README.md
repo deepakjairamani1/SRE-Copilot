@@ -43,6 +43,23 @@ docker compose logs -f
 
 ## Features
 
+### Auto-Investigation (NEW)
+
+Automatically triggers RCA investigations when:
+- CPU/RAM utilization > 90%
+- 3+ consecutive error log batches detected
+
+Sends Slack alerts only for high-severity issues (confidence score > 0.6) to prevent false alerts.
+
+**Quick Start:**
+```bash
+curl -X POST http://localhost:8000/api/auto-investigation/start \
+  -H "Content-Type: application/json" \
+  -d '{"enabled": true, "slack_webhook_url": "YOUR_WEBHOOK_URL"}'
+```
+
+📚 See [QUICKSTART_AUTO_INVESTIGATION.md](QUICKSTART_AUTO_INVESTIGATION.md) for setup guide
+
 ### DynamoDB Investigation Tracking (Optional)
 
 Prevents duplicate error analysis by tracking the last investigation timestamp per service. Each investigation only fetches data since the last run, eliminating overlapping time windows.

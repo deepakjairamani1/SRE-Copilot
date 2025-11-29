@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-C9ED1466",
+  "title": "HTTP Performance Degradation with High Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:14:08.408725",
+  "root_cause": "HTTP service performance degradation causing high error rates and latency spikes",
+  "fix_applied": "Scale up service instances to reduce CPU load",
+  "success": true,
+  "keywords": [
+    "http-error-rate",
+    "latency-spike",
+    "cpu-bottleneck",
+    "performance-degradation",
+    "scaling",
+    "timeout",
+    "circuit-breaker"
+  ],
+  "learning_reason": "Clear performance degradation pattern with actionable metrics and multiple remediation strategies"
+}

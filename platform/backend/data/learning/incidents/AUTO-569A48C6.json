@@ -1,0 +1,19 @@
+{
+  "incident_id": "AUTO-569A48C6",
+  "title": "HTTP Performance Degradation with Elevated Error Rate",
+  "service": "core-athenamind",
+  "detected_at": "2025-11-29T03:09:20.106367",
+  "root_cause": "Application performance bottleneck causing cascading latency and error rate increase",
+  "fix_applied": "Scale up service instances to reduce CPU pressure",
+  "success": true,
+  "keywords": [
+    "http-performance",
+    "latency-spike",
+    "error-rate",
+    "cpu-pressure",
+    "response-time",
+    "service-degradation",
+    "observability-gap"
+  ],
+  "learning_reason": "Classic performance degradation pattern with clear metrics showing CPU pressure and latency correlation, valuable for training anomaly detection"
+}
